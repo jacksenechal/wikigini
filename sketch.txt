@@ -1,0 +1,13 @@
+Person:
+- father
+- mother
+- name
+- bio
+
+Spouses:
+- person1
+- person2
+
+SamePerson:
+- person1
+- person2

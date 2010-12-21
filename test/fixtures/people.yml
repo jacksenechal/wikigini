@@ -1,0 +1,36 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+john:
+  name: John Senechal
+  father: 
+  mother: 
+  gender: male
+  bio: ...
+
+jack:
+  name: Jack Senechal
+  father: john
+  mother: karen
+  gender: male
+  bio: ...
+
+will:
+  name: Will Senechal
+  father: john
+  mother: karen
+  gender: male
+  bio: ...
+
+karen:
+  name: Karen Senechal
+  father: 
+  mother: 
+  gender: female
+  bio: ...
+
+katie:
+  name: Katie Senechal
+  father: john
+  mother: karen
+  gender: female
+  bio: ...
