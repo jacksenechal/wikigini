@@ -1,9 +1,9 @@
 A genealogy wiki for the world
 
 To do:
-============================================================================================================
+=======================================================
 - add spouse relationship
-- add user edit to add mother & father new
+- user can edit mother & father field to add new people inline
 - visualization tree
 
 

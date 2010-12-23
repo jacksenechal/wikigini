@@ -1,4 +1,6 @@
 class PeopleController < ApplicationController
+  before_filter :hack_partners, :only => [:create, :update]
+
   # GET /people
   # GET /people.xml
   def index
@@ -19,6 +21,16 @@ class PeopleController < ApplicationController
       format.html # show.html.erb
       format.xml  { render :xml => @person }
     end
+  end
+
+  def hack_partners
+    params[:person][:partners] = [ Partner.new({
+        :person_id  => params[:id],
+        :partner_id => params[:person][:partners],
+        :nature     => "married",
+        :current    => true,
+        :order      => 1
+        }) ]
   end
 
   # GET /people/new

@@ -21,6 +21,15 @@
 </p>
 
 <p>
+  <b>Partner:</b>
+  <% @person.partners.each do |partner_id|
+        partner = Partner.find(partner_id)
+        person = Person.find(partner.partner_id) %>
+  <%=   link_to(person.name, person) %>
+  <% end %>
+</p>
+
+<p>
   <b>Bio:</b>
   <%= @person.bio %>
 </p>
