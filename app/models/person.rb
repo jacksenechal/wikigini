@@ -1,4 +1,5 @@
 class Person < ActiveRecord::Base
+  has_many :partners
   belongs_to :mother, :class_name => "Person"
   belongs_to :father, :class_name => "Person"
 
