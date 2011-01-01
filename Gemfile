@@ -20,8 +20,11 @@ gem 'sqlite3-ruby', :require => 'sqlite3'
 # Bundle the extra gems:
 # gem 'bj'
 # gem 'nokogiri'
-# gem 'sqlite3-ruby', :require => 'sqlite3'
 # gem 'aws-s3', :require => 'aws/s3'
+gem 'sqlite3-ruby', :require => 'sqlite3'
+
+# gem 'json',                '= 1.4.6'
+# gem 'json_pure',           '= 1.4.6'
 
 # Bundle gems for the local environment. Make sure to
 # put test-only gems in this group so their generators

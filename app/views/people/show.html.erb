@@ -1,3 +1,55 @@
+<%- content_for(:head) do -%>
+<%= javascript_include_tag "protovis" -%>
+<%- end -%>
+
+<script type="text/javascript+protovis">
+
+var person_id = <%= @person.id %>;
+var people = <%= strip_tags( @person.ancestry.to_json ) %>;
+
+/* Basic dimensions. */
+var width = 700;
+var height = 400;
+var boxwidth = 120;
+var boxheight = 60;
+var padding = 30;
+
+/* The root panel. */
+var vis = new pv.Panel()
+    .width(width)
+    .height(height)
+    .bottom(100);
+
+var boxes = vis.add(pv.Panel)
+    .data(people)
+    .height(boxheight)
+    .width(boxwidth)
+    .top(function(p) {
+      return (height / 2) 
+          + ((boxheight + padding) * p.gen)
+          - (boxheight / 2);
+    })
+    .left(function(p) {
+      return boxwidth / 2 + padding 
+          + ((boxwidth  + padding) * p.genindex)
+          - (boxwidth  / 2);
+    })
+    .strokeStyle("#aaa")
+    .fillStyle("#fff")
+    .cursor("pointer")
+    .title("Go to stanford.edu")
+    .event("mouseover", function(p) self.status = "View "+p.name)
+    .event("mouseout", function(p) self.status = "")
+    .event("click", function(p) self.location = "/people/"+p.id);
+
+boxes.anchor("center").add(pv.Label)
+    .text(function (p) p.name);
+
+vis.render();
+
+</script>
+
+
 <p id="notice"><%= notice %></p>
 
 <p>
@@ -21,12 +73,19 @@
 </p>
 
 <p>
-  <b>Partner:</b>
-  <% @person.partners.each do |partner_id|
-        partner = Partner.find(partner_id)
-        person = Person.find(partner.partner_id) %>
-  <%=   link_to(person.name, person) %>
+  <b>Partners:</b>
+  <% @person.partners_resolved.each do |person| %>
+  <%=  link_to(person.name, person) %>
   <% end %>
+</p>
+
+<p>
+  <b>Children:</b>
+  <% if @person.children 
+        @person.children.each { |child| %>
+  <%=     link_to(child.name, child) %>
+  <%    }
+     end %>
 </p>
 
 <p>
