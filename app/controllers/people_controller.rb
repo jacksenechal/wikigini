@@ -24,13 +24,15 @@ class PeopleController < ApplicationController
   end
 
   def hack_partners
-    params[:person][:partners] = [ Partner.new({
-        :person_id  => params[:id],
-        :partner_id => params[:person][:partners],
-        :nature     => "married",
-        :current    => true,
-        :order      => 1
-        }) ]
+    if !params[:person][:partners].empty?
+      params[:person][:partners] = [ Partner.new({
+          :person_id  => params[:id],
+          :partner_id => params[:person][:partners],
+          :nature     => "married",
+          :current    => true,
+          :order      => 1
+          }) ]
+    end
   end
 
   # GET /people/new

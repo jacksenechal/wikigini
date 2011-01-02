@@ -29,7 +29,7 @@
   </div>
   <div class="field">
     <%= f.label :partner %><br />
-    <%= f.collection_select :partners, Person.all, :id, :name, :include_blank => true %>
+    <%= f.collection_select :partners, Person.all, :id, :name, :include_blank => true, :selected => @person.partners_resolved.first.id %>
   </div>
   <div class="field">
     <%= f.label :bio %><br />
