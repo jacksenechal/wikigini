@@ -74,7 +74,7 @@ vis.render();
 
 <p>
   <b>Partners:</b>
-  <% @person.partners_resolved.each do |person| %>
+  <% @person.partners.each do |person| %>
   <%=  link_to(person.name, person) %>
   <% end %>
 </p>

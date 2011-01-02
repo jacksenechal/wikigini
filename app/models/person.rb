@@ -1,18 +1,11 @@
 class Person < ActiveRecord::Base
-  has_many :partners
+  has_many :partnerships, :dependent => :destroy
+  has_many :partners, :through => :partnerships, :source => :person
   belongs_to :mother, :class_name => "Person"
   belongs_to :father, :class_name => "Person"
 
   def children
     Person.find(:all, :conditions => ["father_id = ? OR mother_id = ?", self.id, self.id] )
-  end
-
-  def partners_resolved
-    partners = []
-    self.partners.each do |partner|
-      partners.push Person.find(partner.partner_id)
-    end
-    partners
   end
 
   def ancestry
@@ -21,9 +14,9 @@ class Person < ActiveRecord::Base
     people = [me]
 
     # add their partners
-    if partners_resolved
+    if self.partners
       genindex = 1
-      partners_resolved.each do |p|
+      partners.each do |p|
         people.push p.attributes.merge({ :gen => "0", :genindex => genindex })
         genindex += 1
       end

@@ -10,14 +10,14 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20101223062720) do
+ActiveRecord::Schema.define(:version => 20110102015152) do
 
-  create_table "partners", :force => true do |t|
+  create_table "partnerships", :force => true do |t|
     t.integer "person_id"
     t.integer "partner_id"
-    t.integer "order"
+    t.date    "date_started"
+    t.date    "date_ended"
     t.string  "nature"
-    t.boolean "current"
   end
 
   create_table "people", :force => true do |t|
