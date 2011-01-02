@@ -1,9 +1,10 @@
-A genealogy wiki for the world
+Wikified Geneology
+------------------
 
-To do:
-=======================================================
-- add spouse relationship
-- user can edit mother & father field to add new people inline
-- visualization tree
+Project tracking:
 
+[https://www.pivotaltracker.com/projects/185919](https://www.pivotaltracker.com/projects/185919)
 
+Project home page:
+
+[http://geneawiki.heroku.com](http://geneawiki.heroku.com)
