@@ -4,4 +4,4 @@
 require File.expand_path('../config/application', __FILE__)
 require 'rake'
 
-GeneaWiki::Application.load_tasks
+WikiGini::Application.load_tasks

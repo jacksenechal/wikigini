@@ -1,4 +1,4 @@
-GeneaWiki::Application.routes.draw do
+WikiGini::Application.routes.draw do
   resources :people
 
   # The priority is based upon order of creation:

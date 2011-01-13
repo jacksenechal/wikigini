@@ -1,4 +1,4 @@
-GeneaWiki::Application.configure do
+WikiGini::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb
 
   # The production environment is meant for finished, "live" apps.

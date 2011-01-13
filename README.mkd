@@ -7,4 +7,4 @@ Project tracking:
 
 Project home page:
 
-[http://geneawiki.heroku.com](http://geneawiki.heroku.com)
+[http://wikigini.heroku.com](http://wikigini.heroku.com)
