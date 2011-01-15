@@ -1,45 +1,45 @@
 class Person < ActiveRecord::Base
   has_many :partnerships, :dependent => :destroy
   has_many :partners, :through => :partnerships, :source => :person
-  belongs_to :mother, :class_name => "Person"
-  belongs_to :father, :class_name => "Person"
+  has_many :children_of_father, :class_name => 'Person', :foreign_key => 'father_id'
+  has_many :children_of_mother, :class_name => 'Person', :foreign_key => 'mother_id'
+  #named_scope :children, :include => [ :children_of_father, :children_of_mother ]
+  belongs_to :mother, :class_name => 'Person'
+  belongs_to :father, :class_name => 'Person'
+  # named_scope :parents, { :include => [ :mother, :father ] }
 
   def children
-    Person.find(:all, :conditions => ["father_id = ? OR mother_id = ?", self.id, self.id] )
+    self.children_of_father | self.children_of_mother
   end
 
-  def ancestry
+  def parents
+    parents = []
+    parents.push self.mother if self.mother
+    parents.push self.father if self.father
+    parents
+  end
+
+  def ancestry_json
     # add the person
-    me = self.attributes.merge({ :gen => "0", :genindex => 0 })
-    people = [me]
-
-    # add their partners
-    if self.partners
-      genindex = 1
-      partners.each do |p|
-        people.push p.attributes.merge({ :gen => "0", :genindex => genindex })
-        genindex += 1
-      end
-    end
-
-    # add the parents
-    if self.father
-      people.push self.father.attributes.merge({ :gen => "-1", :genindex => 0 })
-    end
-    if self.mother
-      people.push self.mother.attributes.merge({ :gen => "-1", :genindex => 1 })
-    end
-
+    people = self.attributes.to_hash
     # add the children
-    if self.children
-      genindex = 0
-      self.children.each do |p|
-        people.push p.attributes.merge({ :gen => "1", :genindex => genindex })
-        genindex += 1
-      end
+    people['children'] = []
+    self.children_of_father.each do |child|
+      people['children'].push child.attributes.to_hash.merge({ 'data' => { '$orn' => 'top' } })
     end
-
-    people
+    self.children_of_mother.each do |child|
+      people['children'].push child.attributes.to_hash.merge({ 'data' => { '$orn' => 'top' } })
+    end
+    # add the partners
+    self.partners.each do |partner|
+      people['children'].push partner.attributes.to_hash.merge({ 'data' => { '$orn' => 'left' } })
+    end
+    # add the parents
+    self.parents.each do |parent|
+      people['children'].push parent.attributes.to_hash.merge({ 'data' => { '$orn' => 'bottom' } })
+    end
+    # return json
+    people.to_json
   end
 
   def self.men(conditions = {})

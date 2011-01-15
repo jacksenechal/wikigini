@@ -1,5 +1,4 @@
 class Partnership < ActiveRecord::Base
-  belongs_to :person
   belongs_to :person, :foreign_key => :partner_id
   after_create do |p|
     if !Partnership.find(:first, :conditions => { :partner_id => p.person_id })
