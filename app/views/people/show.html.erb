@@ -36,6 +36,7 @@ function init()
       width: 60,  
       type: 'rectangle',  
       color: '#aaa',  
+      autoHeight: true,
       overridable: true  
     },  
       
@@ -47,10 +48,10 @@ function init()
     //This method is called on DOM label creation.  
     //Use this method to add event handlers and styles to  
     //your node.  
-    onCreateLabel: function(label, node){  
+    onCreateLabel: function(label, node) {
       label.id = node.id;              
       label.innerHTML = node.name;  
-      label.onclick = function(){  
+      label.onclick = function() {
         document.location.href = '/people/'+node.id;
       };  
       //set label styles  
@@ -61,7 +62,7 @@ function init()
       style.color = '#333';  
       style.fontSize = '0.8em';  
       style.textAlign= 'center';  
-      style.paddingTop = '3px';  
+      style.padding = '3px';  
     },  
       
     //This method is called right before plotting  
@@ -69,7 +70,7 @@ function init()
     //style properties before plotting it.  
     //The data properties prefixed with a dollar  
     //sign will override the global node style properties.  
-    onBeforePlotNode: function(node){  
+    onBeforePlotNode: function(node) {
       //add some color to the nodes in the path between the  
       //root node and the selected node.  
       if (node.selected) {  
@@ -94,7 +95,7 @@ function init()
     //style properties before plotting it.  
     //Edge data proprties prefixed with a dollar sign will  
     //override the Edge global style properties.  
-    onBeforePlotLine: function(adj){  
+    onBeforePlotLine: function(adj) {
       if (adj.nodeFrom.selected && adj.nodeTo.selected) {  
         adj.data.$color = "#eed";  
         adj.data.$lineWidth = 3;  
@@ -118,51 +119,55 @@ $(function() {
 
 </script>
 
-<div id="infovis"></div>    
+<div id="infovis" class="ui-widget-content">
+  <h3 class="ui-widget-header">Family Tree</h3>
+</div>    
 
-<p id="notice"><%= notice %></p>
+<div id="content">
+  <p id="notice"><%= notice %></p>
 
-<p>
-  <b>Name:</b>
-  <%= @person.name %>
-</p>
+  <p>
+    <b>Name:</b>
+    <%= @person.name %>
+  </p>
 
-<p>
-  <b>Gender:</b>
-  <%= @person.gender %>
-</p>
+  <p>
+    <b>Gender:</b>
+    <%= @person.gender %>
+  </p>
 
-<p>
-  <b>Father:</b>
-  <%= link_to(@person.father.name, @person.father) if @person.father %>
-</p>
+  <p>
+    <b>Father:</b>
+    <%= link_to(@person.father.name, @person.father) if @person.father %>
+  </p>
 
-<p>
-  <b>Mother:</b>
-  <%= link_to(@person.mother.name, @person.mother) if @person.mother %>
-</p>
+  <p>
+    <b>Mother:</b>
+    <%= link_to(@person.mother.name, @person.mother) if @person.mother %>
+  </p>
 
-<p>
-  <b>Partners:</b>
-  <% @person.partners.each do |person| %>
-  <%=  link_to(person.name, person) %>
-  <% end %>
-</p>
+  <p>
+    <b>Partners:</b>
+    <% @person.partners.each do |person| %>
+    <%=  link_to(person.name, person) %>
+    <% end %>
+  </p>
 
-<p>
-  <b>Children:</b>
-  <% if @person.children 
-        @person.children.each { |child| %>
-  <%=     link_to(child.name, child) %>
-  <%    }
-     end %>
-</p>
+  <p>
+    <b>Children:</b>
+    <% if @person.children 
+          @person.children.each { |child| %>
+    <%=     link_to(child.name, child) %>
+    <%    }
+       end %>
+  </p>
 
-<p>
-  <b>Bio:</b>
-  <%= @person.bio %>
-</p>
+  <p>
+    <b>Bio:</b>
+    <%= @person.bio %>
+  </p>
 
 
-<%= link_to 'Edit', edit_person_path(@person) %> |
-<%= link_to 'Back', people_path %>
+  <%= link_to 'Edit', edit_person_path(@person) %> |
+  <%= link_to 'Back', people_path %>
+</div>

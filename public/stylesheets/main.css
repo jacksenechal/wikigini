@@ -1,0 +1,12 @@
+h3 {
+  margin: 0.5em;
+}
+
+.left {
+  width: 49%;
+  float: left;
+}
+.right {
+  width: 49%;
+  float: right;
+}
