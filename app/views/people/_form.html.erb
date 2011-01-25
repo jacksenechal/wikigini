@@ -29,9 +29,10 @@
   </div>
   <div class="field">
     <%= f.label :partner %><br />
-    <%= f.collection_select :partner_ids, Person.all, :id, :name, 
+    <%= f.autocomplete_field :partner_ids, autocomplete_person_name_people_path %>
+    <!--f.collection_select :partner_ids, Person.all, :id, :name, 
         { :include_blank => true, :selected => ( @person.partner_ids ) },
-        { :multiple => true, :name => "person[partner_ids][]" } %>
+        { :multiple => true, :name => "person[partner_ids][]" }-->
   </div>
   <div class="field">
     <%= f.label :bio %><br />

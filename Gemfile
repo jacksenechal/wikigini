@@ -7,6 +7,9 @@ gem 'rails', '3.0.3'
 
 gem 'sqlite3-ruby', :require => 'sqlite3'
 
+gem 'rails3-jquery-autocomplete'
+gem 'jquery-rails'
+
 # Use unicorn as the web server
 # gem 'unicorn'
 
@@ -21,7 +24,6 @@ gem 'sqlite3-ruby', :require => 'sqlite3'
 # gem 'bj'
 # gem 'nokogiri'
 # gem 'aws-s3', :require => 'aws/s3'
-gem 'sqlite3-ruby', :require => 'sqlite3'
 
 # gem 'json',                '= 1.4.6'
 # gem 'json_pure',           '= 1.4.6'

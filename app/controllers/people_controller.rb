@@ -1,4 +1,6 @@
 class PeopleController < ApplicationController
+  autocomplete :person, :name
+
   # GET /people
   # GET /people.xml
   def index
