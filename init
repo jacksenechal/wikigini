@@ -1,0 +1,2 @@
+#!/bin/bash
+export GEM_PATH='/home/jack/.gems/:/usr/lib/ruby/gems/1.8/'
