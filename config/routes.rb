@@ -2,6 +2,7 @@ WikiGini::Application.routes.draw do
   resources :people do
     get :autocomplete_person_name, :on => :collection
   end
+  resources :partnerships
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

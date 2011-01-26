@@ -1,6 +1,6 @@
 class Person < ActiveRecord::Base
   has_many :partnerships, :dependent => :destroy
-  has_many :partners, :through => :partnerships, :source => :person
+  has_many :partners, :through => :partnerships, :source => :partner
   has_many :children_of_father, :class_name => 'Person', :foreign_key => 'father_id'
   has_many :children_of_mother, :class_name => 'Person', :foreign_key => 'mother_id'
   #named_scope :children, :include => [ :children_of_father, :children_of_mother ]
