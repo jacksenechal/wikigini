@@ -64,9 +64,11 @@ class PeopleController < ApplicationController
       if @person.update_attributes(params[:person])
         format.html { redirect_to(@person, :notice => 'Person was successfully updated.') }
         format.xml  { head :ok }
+        format.json  { head :ok }
       else
         format.html { render :action => "edit" }
         format.xml  { render :xml => @person.errors, :status => :unprocessable_entity }
+        format.json  { render :xml => @person.errors, :status => :unprocessable_entity }
       end
     end
   end

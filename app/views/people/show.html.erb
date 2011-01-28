@@ -173,6 +173,11 @@ $(document).ready(function(){
     });
 
 });
+
+$(document).ready(function() {
+/* Activating in-place ajaxy editing */
+jQuery(".best_in_place").best_in_place()
+});
 </script>
 
 <div id="infovis" class="ui-widget-content">
@@ -182,29 +187,67 @@ $(document).ready(function(){
 <div id="content">
   <p id="notice"><%= notice %></p>
 
-  <p>
-    <b>Name:</b>
-    <%= @person.name %>
-  </p>
+  <table>
+  <tr>
+    <th>Name:</th>
+    <td>
+      <div class='editable'>
+        <span class='best_in_place' 
+          id='best_in_place_person_name' 
+          data-url='/people/5' 
+          data-object='person' 
+          data-attribute='name' 
+          data-activator='#edit_person_name'
+          data-type='input'
+          ><%= @person.name %></span>
+        <div class="edit_button" id="edit_person_name">edit</span>
+      </div>
+    </td>
+  </tr>
 
-  <p>
-    <b>Gender:</b>
-    <%= @person.gender %>
-  </p>
+  <tr>
+    <th>Gender:</th>
+    <td>
+      <div class='editable'>
+        <span class='best_in_place' 
+          id='best_in_place_person_gender' 
+          data-url='/people/5' 
+          data-object='person' 
+          data-attribute='gender' 
+          data-activator='#edit_person_gender'
+          data-type='select'
+          data-collection='[["male","male"],["female","female"]]'
+          ><%= @person.gender %></span>
+        <div class="edit_button" id="edit_person_gender">edit</span>
+      </div>
+    </td>
+  </tr>
 
-  <p>
-    <b>Father:</b>
-    <%= link_to(@person.father.name, @person.father) if @person.father %>
-  </p>
+  <tr>
+    <th>Father:</th>
+    <td>
+      <div class='editable'>
+        <span class='best_in_place' 
+          id='best_in_place_person_father' 
+          data-url='/people/5' 
+          data-object='person' 
+          data-attribute='father' 
+          data-activator='#edit_person_father'
+          data-type='input'
+          ><%= link_to(@person.father.name, @person.father) if @person.father %></span>
+        <div class="edit_button" id="edit_person_father">edit</span>
+      </div>
+    </td>
+  </tr>
 
-  <p>
-    <b>Mother:</b>
-    <%= link_to(@person.mother.name, @person.mother) if @person.mother %>
-  </p>
+  <tr>
+    <th>Mother:</th>
+    <td><%= link_to(@person.mother.name, @person.mother) if @person.mother %></td>
+  </tr>
 
-  <p>
-    <b>Partners:</b>
-    <%= render :partial => 'partnerships/index', :locals => { :partnerships => @person.partnerships } %>
+  <tr>
+    <th>Partners:</th>
+    <td><%= render :partial => 'partnerships', :locals => { :person => @person } %>
     <%= form_for :partnership, :remote => true, :url => partnerships_path,
                  :html => { 'data-type' => 'html', :id => 'create_partnership_form' } do |f| %>
       Add new partner: 
@@ -213,22 +256,22 @@ $(document).ready(function(){
       <%= f.hidden_field(:partner_id) %>
       <%= f.submit %>
       <div class="validation-error"></div>
-    <% end %>
-  </p>
+    <% end %></td>
+  </tr>
 
-  <p>
-    <b>Children:</b>
-    <% if @person.children 
-          @person.children.each { |child| %>
-    <%=     link_to(child.name, child) %>
-    <%    }
-       end %>
-  </p>
+  <tr>
+    <th>Children:</th>
+    <td><% if @person.children 
+         @person.children.each { |child| %>
+    <%=    link_to(child.name, child) %>
+    <%   }
+       end %></td>
+  </tr>
 
-  <p>
-    <b>Bio:</b>
-    <%= @person.bio %>
-  </p>
+  <tr>
+    <th>Bio:</th>
+    <td><%= best_in_place @person, :bio, :type => :textarea, :nil => '<span class="nil">Click to add text</span>' %></td>
+  </tr>
 
 
   <%= link_to 'Edit', edit_person_path(@person) %> |

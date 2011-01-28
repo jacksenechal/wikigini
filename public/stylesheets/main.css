@@ -1,12 +1,32 @@
+table {
+  border: none;
+  border-spacing: 3px;
+}
+td, th {
+  vertical-align: top;
+  text-align: left;
+}
+th {
+  padding-right: 10px;
+}
 h3 {
   margin: 0.5em;
 }
-
 .left {
-  width: 49%;
   float: left;
 }
 .right {
-  width: 49%;
   float: right;
+}
+.nil {
+  color: #aaa;
+}
+div.editable {
+  background-color: #ddd;
+  padding: 0px 4px;
+  border-radius: 2px;
+}
+div.edit_button {
+  float: right;
+  cursor: pointer;
 }

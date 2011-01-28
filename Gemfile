@@ -9,6 +9,7 @@ gem 'sqlite3-ruby', :require => 'sqlite3'
 
 gem 'rails3-jquery-autocomplete'
 gem 'jquery-rails'
+gem 'best_in_place'
 
 # Use unicorn as the web server
 # gem 'unicorn'
