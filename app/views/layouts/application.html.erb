@@ -13,8 +13,10 @@
   <%= csrf_meta_tag %>
 </head>
 <body <%= yield :body_tag_attributes -%>>
+  <div id="page">
 
 <%= yield %>
 
+  </div>
 </body>
 </html>

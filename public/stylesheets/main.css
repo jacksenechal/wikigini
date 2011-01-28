@@ -12,6 +12,15 @@ th {
 h3 {
   margin: 0.5em;
 }
+#page {
+  width: 600px;
+  margin: auto;
+}
+#infovis {
+  height: 400px;
+  width: 100%;
+  overflow: hidden;
+}
 .left {
   float: left;
 }
@@ -21,12 +30,15 @@ h3 {
 .nil {
   color: #aaa;
 }
-div.editable {
-  background-color: #ddd;
+span.best_in_place {
+  display: block;
   padding: 0px 4px;
   border-radius: 2px;
-}
-div.edit_button {
-  float: right;
   cursor: pointer;
 }
+span.best_in_place:hover {
+  background-image: url('/images/edit.png');
+  background-repeat: no-repeat;
+  background-position: right top;
+}
+

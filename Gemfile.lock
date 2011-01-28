@@ -1,3 +1,9 @@
+PATH
+  remote: ../best_in_place/
+  specs:
+    best_in_place (0.1.7)
+      rails (~> 3.0.0)
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -29,8 +35,6 @@ GEM
       activesupport (= 3.0.3)
     activesupport (3.0.3)
     arel (2.0.6)
-    best_in_place (0.1.7)
-      rails (~> 3.0.0)
     builder (2.1.2)
     erubis (2.6.6)
       abstract (>= 1.0.0)
@@ -78,7 +82,7 @@ PLATFORMS
   x86-mingw32
 
 DEPENDENCIES
-  best_in_place
+  best_in_place!
   jquery-rails
   rails (= 3.0.3)
   rails3-jquery-autocomplete
