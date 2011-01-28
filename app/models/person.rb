@@ -1,5 +1,9 @@
 class Person < ActiveRecord::Base
-  has_many :partnerships, :dependent => :destroy
+  has_many :partnerships, :dependent => :destroy, :finder_sql =>
+    'SELECT DISTINCT ps.* '+
+      'FROM partnerships ps '+
+      'WHERE ps.person_id = #{id} OR ps.partner_id = #{id} '+
+      'ORDER BY ps.date_started'
   has_many :partners, :class_name => 'Person', :finder_sql => 
     'SELECT DISTINCT p.* '+
       'FROM people p, partnerships ps '+
