@@ -5,7 +5,7 @@ class Person < ActiveRecord::Base
       'WHERE ps.person_id = #{id} OR ps.partner_id = #{id} '+
       'ORDER BY ps.date_started'
   has_many :partners, :class_name => 'Person', :finder_sql => 
-    'SELECT DISTINCT p.* '+
+    'SELECT DISTINCT p.*, ps.date_started '+
       'FROM people p, partnerships ps '+
       'WHERE (ps.partner_id = #{id} AND ps.person_id = p.id) '+
         'OR (ps.person_id = #{id} AND ps.partner_id = p.id) '+
