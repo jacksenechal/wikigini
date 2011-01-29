@@ -1,9 +1,3 @@
-PATH
-  remote: ../best_in_place/
-  specs:
-    best_in_place (0.1.7)
-      rails (~> 3.0.0)
-
 GEM
   remote: http://rubygems.org/
   specs:
@@ -82,7 +76,6 @@ PLATFORMS
   x86-mingw32
 
 DEPENDENCIES
-  best_in_place!
   jquery-rails
   rails (= 3.0.3)
   rails3-jquery-autocomplete
