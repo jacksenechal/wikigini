@@ -12,6 +12,9 @@ th {
 h3 {
   margin: 0.5em;
 }
+textarea {
+  min-height: 15em;
+}
 #page {
   width: 600px;
   margin: auto;
@@ -37,6 +40,7 @@ span.best_in_place {
   cursor: pointer;
 }
 span.best_in_place:hover {
+  background-color: #eee;
   background-image: url('/images/edit.png');
   background-repeat: no-repeat;
   background-position: right top;
