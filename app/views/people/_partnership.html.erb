@@ -1,3 +1,4 @@
-<div class="partnership">
-  <%= link_to(partnership.partner_of_person(person).name, partnership.partner_of_person(person)) %>
+<div class="partnership" id="partnership_<%= partnership.id %>">
+  <%= link_to( partnership.partner_of_person( person ).name, partnership.partner_of_person( person ) ) %>
+  <%= link_to_function( 'x', "removePartnership(" + partnership.id.to_s + ")" ) %>
 </div>

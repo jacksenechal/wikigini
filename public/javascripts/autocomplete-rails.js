@@ -63,8 +63,8 @@ $(document).ready(function(){
 					}
 				},
 				focus: function() {
-								// prevent value inserted on focus
-					return false;
+          // prevent value inserted on focus
+          //return false;
 				},
 				select: function( event, ui ) {
 					var terms = split( this.value );

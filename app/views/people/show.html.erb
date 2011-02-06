@@ -132,52 +132,101 @@ $(document).ready(function(){
     .bind("ajax:success", function(evt, data, status, xhr){
       var $form = $(this);
 
-      // Reset fields and any validation errors, so form can be used again, but leave hidden_field values intact.
-      $form.find('textarea,input[type="text"],input[type="file"]').val("");
-      $form.find('div.validation-error').empty();
+      // Reset fields so form can be used again, but leave hidden_field values intact.
+      $form.find('textarea,input[type="text"],input[type="file"]').val("").blur();
 
       // Insert response partial into page below the form.
       $('#partnerships').append(xhr.responseText);
-
+      
+      // Hide the form
+      swapVisibility($('#add_partnership_link'), $('#add_partnership_form'));
     })
     .bind('ajax:complete', function(evt, xhr, status){
-      var $submitButton = $(this).find('input[name="commit"]');
-
+      $("#partnership_partner_id").val('');
       // Restore the original submit button text
+      var $submitButton = $(this).find('input[name="commit"]');
       $submitButton.text( $(this).data('origText') );
     })
-    .bind("ajax:error", function(evt, xhr, status, error){
-      var $form = $(this),
-          errors,
-          errorText;
-
-      try {
-        // Populate errorText with the partnership errors
-        errors = $.parseJSON(xhr.responseText);
-      } catch(err) {
-        // If the responseText is not valid JSON (like if a 500 exception was thrown), populate errors with a generic error message.
-        errors = {message: "Please reload the page and try again"};
-      }
-
-      // Build an unordered list from the list of errors
-      errorText = "There were errors with the submission: \n<ul>";
-
-      for ( error in errors ) {
-        errorText += "<li>" + error + ': ' + errors[error] + "</li> ";
-      }
-
-      errorText += "</ul>";
-
-      // Insert error list into form
-      $form.find('div.validation-error').html(errorText);
-    });
+    .bind("ajax:error", autoCompleteErrorHandler);
 
 });
+
+function removePartnership(id) {
+  var options = {
+    type:       "post",
+    url:        "/partnerships/" + id,
+    dataType:   'script',
+    data:       { '_method': 'delete' },
+    success:    function() { removePartnershipSuccessCallback(id) },
+    error:      function(xhr){ errorHandler(xhr) },
+    beforeSend: function(xhr){ xhr.setRequestHeader("Accept", "application/json") }
+  };
+  jQuery.ajax(options);
+}
+
+function removePartnershipSuccessCallback(id) {
+  $("#partnership_"+ id).remove();
+}
+
+function autoCompleteErrorHandler(evt, xhr, status, error) {
+  errorHandler(xhr);
+}
+
+function errorHandler(xhr) {
+  var errors, errorText;
+
+  try {
+    // Populate errorText with the partnership errors
+    errors = $.parseJSON(xhr.responseText);
+  } catch(err) {
+    // If the responseText is not valid JSON (like if a 500 exception was thrown), populate errors with a generic error message.
+    errors = {message: "Unknown error: Please reload the page and try again"};
+  }
+
+  // Build the list of errors
+  errorText = "Oops! Seems there was a problem. ";
+  errorText += errors.join(', ');
+
+  var notice = '<div class="notice">'
+    + '<div class="notice-body">' 
+    + '<img src="/images/info.png" alt="" />'
+    + '<h3>Error</h3>'
+    + '<p>'+ errorText +'</p>'
+    + '</div>'
+    + '<div class="notice-bottom">'
+    + '</div>'
+    + '</div>';
+    
+  $( notice ).purr({
+    usingTransparentPNG: true,
+    isSticky: true
+  });
+}
+
+function swapVisibility(thing_1, thing_2) {
+  if ($(thing_1).css('display') == 'none') {
+    $(thing_1).show();
+    $(thing_2).hide();
+  } else {
+    $(thing_2).show();
+    $(thing_1).hide();
+  }
+}
 
 /* Activate in-place ajaxy editing with best_in_place */
 $(document).ready(function() {
     jQuery(".best_in_place").best_in_place()
 });
+
+/* Bind escape key handler for add partnership form */
+$(document).ready(function(){
+    $('#partnership_name').bind('keyup', function(event) {
+      if (event.keyCode == 27) { // escape key
+        swapVisibility($('#add_partnership_link'), $('#add_partnership_form'));
+      }
+    });
+});
+
 </script>
 
 <div id="infovis" class="ui-widget-content">
@@ -211,17 +260,16 @@ $(document).ready(function() {
     <tr>
       <th>Partners:</th>
       <td><%= render :partial => 'partnerships', :locals => { :person => @person } %>
-        <%= 
-          form_for :partnership, :remote => true, :url => partnerships_path,
-            :html => { 'data-type' => 'html', :id => 'create_partnership_form' } do |f| 
-          %>
-          Add new partner: 
-          <%= f.autocomplete_field :name, autocomplete_person_name_people_path, :id_element => "#partnership_partner_id" %>
-          <%= f.hidden_field(:person_id, :value => @person.id) %>
-          <%= f.hidden_field(:partner_id) %>
-          <%= f.submit %>
-          <div class="validation-error"></div>
-        <% end %>
+        <%= link_to_function( "Add new partner", "swapVisibility($('#add_partnership_form'), $('#add_partnership_link')); $('#partnership_name').focus()", :id => "add_partnership_link" ) %>
+        <div id="add_partnership_form">
+          <%= form_for :partnership, :remote => true, :url => partnerships_path,
+              :html => { 'data-type' => 'html', :id => 'create_partnership_form' } do |f| %>
+            <%= f.autocomplete_field :name, autocomplete_person_name_people_path, :id_element => "#partnership_partner_id" %>
+            <%= f.hidden_field(:person_id, :value => @person.id) %>
+            <%= f.hidden_field(:partner_id) %>
+            <%= f.submit "add" %>
+          <% end %>
+        </div>
       </td>
     </tr>
 
