@@ -1,233 +1,219 @@
-<%- content_for(:head) do -%>
+<%- content_for( :head ) do -%>
 <%= javascript_include_tag "jit" -%>
+<%= javascript_include_tag "tree" -%>
 <%= stylesheet_link_tag "jit-spacetree" -%>
 <%- end -%>
 
-<%- content_for(:body_tag_attributes) do -%>
-onLoad="init();"
-<%- end -%>
-
 <script type="text/javascript">
+  $( function() {
+    // global variable (I know, I know...) to store the current target of the create person dialog
+    var $CREATE_PERSON_TARGET = null;
 
-function init()
-{
-  var people = <%= strip_tags( @person.ancestry_json ) %>;
+    /* Initialize the JIT family tree visualization (tree.js) */
+    var people = <%= strip_tags( @person.ancestry_json ) %>;
+    initTree( people );
 
-  //Create a new ST instance  
-  var st = new $jit.ST({  
-    //make it a multitree
-    multitree: true,
-    //set orientation of the tree
-    orientation: 'top',
-    //id of viz container element  
-    injectInto: 'infovis',  
-    //set distance between node and its children  
-    levelDistance: 50,  
-    //enable panning  
-    Navigation: {  
-      enable:true,  
-      panning:true
-    },  
-    //set node and edge styles  
-    //set overridable=true for styling individual  
-    //nodes or edges  
-    Node: {  
-      height: 20,  
-      width: 60,  
-      type: 'rectangle',  
-      color: '#aaa',  
-      autoHeight: true,
-      overridable: true  
-    },  
-      
-    Edge: {  
-      type: 'bezier',  
-      overridable: true  
-    },  
-      
-    //This method is called on DOM label creation.  
-    //Use this method to add event handlers and styles to  
-    //your node.  
-    onCreateLabel: function(label, node) {
-      label.id = node.id;              
-      label.innerHTML = node.name;  
-      label.onclick = function() {
-        document.location.href = '/people/'+node.id;
-      };  
-      //set label styles  
-      var style = label.style;  
-      style.width = 60 + 'px';  
-      style.height = 17 + 'px';              
-      style.cursor = 'pointer';  
-      style.color = '#333';  
-      style.fontSize = '0.8em';  
-      style.textAlign= 'center';  
-      style.padding = '3px';  
-    },  
-      
-    //This method is called right before plotting  
-    //a node. It's useful for changing an individual node  
-    //style properties before plotting it.  
-    //The data properties prefixed with a dollar  
-    //sign will override the global node style properties.  
-    onBeforePlotNode: function(node) {
-      //add some color to the nodes in the path between the  
-      //root node and the selected node.  
-      if (node.selected) {  
-        node.data.$color = "#ff7";  
-      }  
-      else {  
-        delete node.data.$color;  
-        //if the node belongs to the last plotted level  
-        if(!node.anySubnode("exist")) {  
-          //count children number  
-          var count = 0;  
-          node.eachSubnode(function(n) { count++; });  
-          //assign a node color based on  
-          //how many children it has  
-          node.data.$color = ['#aaa', '#baa', '#caa', '#daa', '#eaa', '#faa'][count];                      
-        }  
-      }  
-    },  
-      
-    //This method is called right before plotting  
-    //an edge. It's useful for changing an individual edge  
-    //style properties before plotting it.  
-    //Edge data proprties prefixed with a dollar sign will  
-    //override the Edge global style properties.  
-    onBeforePlotLine: function(adj) {
-      if (adj.nodeFrom.selected && adj.nodeTo.selected) {  
-        adj.data.$color = "#eed";  
-        adj.data.$lineWidth = 3;  
-      }  
-      else {  
-        delete adj.data.$color;  
-        delete adj.data.$lineWidth;  
-      }  
-    }  
-  });  
-  //load json data  
-  st.loadJSON(people);  
-  //compute node positions and layout  
-  st.compute();  
-  st.select(st.root);
-}
+    /* Activate in-place ajaxy editing with best_in_place */
+    $( ".best_in_place" ).best_in_place()
 
-$(function() {
-  $( "#infovis" ).resizable();
-});
+    /* Partnership form */
+    $( '#create_partnership_form' )
+      .bind( "ajax:beforeSend", function( evt, xhr, settings ) {
+        var $submitButton = $( this ).find( 'input[name="commit"]' );
 
-$(document).ready(function(){
+        // Update the text of the submit button to let the user know stuff is happening.
+        // But first, store the original text of the submit button, so it can be restored when the request is finished.
+        $submitButton.data( 'origText', $( this ).text() );
+        $submitButton.text( "Saving..." );
 
-  $('#create_partnership_form')
-    .bind("ajax:beforeSend", function(evt, xhr, settings){
-      var $submitButton = $(this).find('input[name="commit"]');
+      } )
+      .bind( "ajax:success", function( evt, data, status, xhr ) {
+        var $form = $( this );
 
-      // Update the text of the submit button to let the user know stuff is happening.
-      // But first, store the original text of the submit button, so it can be restored when the request is finished.
-      $submitButton.data( 'origText', $(this).text() );
-      $submitButton.text( "Saving..." );
+        // Reset fields so form can be used again, but leave hidden_field values intact.
+        clearFields( $form );
 
-    })
-    .bind("ajax:success", function(evt, data, status, xhr){
-      var $form = $(this);
+        // Insert response partial into page below the form.
+        $( '#partnerships' ).append( xhr.responseText );
+        
+        // Hide the form
+        swapVisibility( $( '#add_partnership_link' ), $( '#add_partnership_form' ) );
+      } )
+      .bind( 'ajax:complete', function( evt, xhr, status ) {
+        $( "#partnership_partner_id" ).val( '' );
+        // Restore the original submit button text
+        var $submitButton = $( this ).find( 'input[name="commit"]' );
+        $submitButton.text( $( this ).data( 'origText' ) );
+      } )
+      .bind( "ajax:error", ajaxFormErrorHandler );
 
-      // Reset fields so form can be used again, but leave hidden_field values intact.
-      $form.find('textarea,input[type="text"],input[type="file"]').val("").blur();
-
-      // Insert response partial into page below the form.
-      $('#partnerships').append(xhr.responseText);
-      
-      // Hide the form
-      swapVisibility($('#add_partnership_link'), $('#add_partnership_form'));
-    })
-    .bind('ajax:complete', function(evt, xhr, status){
-      $("#partnership_partner_id").val('');
-      // Restore the original submit button text
-      var $submitButton = $(this).find('input[name="commit"]');
-      $submitButton.text( $(this).data('origText') );
-    })
-    .bind("ajax:error", autoCompleteErrorHandler);
-
-});
-
-function removePartnership(id) {
-  var options = {
-    type:       "post",
-    url:        "/partnerships/" + id,
-    dataType:   'script',
-    data:       { '_method': 'delete' },
-    success:    function() { removePartnershipSuccessCallback(id) },
-    error:      function(xhr){ errorHandler(xhr) },
-    beforeSend: function(xhr){ xhr.setRequestHeader("Accept", "application/json") }
-  };
-  jQuery.ajax(options);
-}
-
-function removePartnershipSuccessCallback(id) {
-  $("#partnership_"+ id).remove();
-}
-
-function autoCompleteErrorHandler(evt, xhr, status, error) {
-  errorHandler(xhr);
-}
-
-function errorHandler(xhr) {
-  var errors, errorText;
-
-  try {
-    // Populate errorText with the partnership errors
-    errors = $.parseJSON(xhr.responseText);
-  } catch(err) {
-    // If the responseText is not valid JSON (like if a 500 exception was thrown), populate errors with a generic error message.
-    errors = {message: "Unknown error: Please reload the page and try again"};
-  }
-
-  // Build the list of errors
-  errorText = "Oops! Seems there was a problem. ";
-  errorText += errors.join(', ');
-
-  var notice = '<div class="notice">'
-    + '<div class="notice-body">' 
-    + '<img src="/images/info.png" alt="" />'
-    + '<h3>Error</h3>'
-    + '<p>'+ errorText +'</p>'
-    + '</div>'
-    + '<div class="notice-bottom">'
-    + '</div>'
-    + '</div>';
-    
-  $( notice ).purr({
-    usingTransparentPNG: true,
-    isSticky: true
-  });
-}
-
-function swapVisibility(thing_1, thing_2) {
-  if ($(thing_1).css('display') == 'none') {
-    $(thing_1).show();
-    $(thing_2).hide();
-  } else {
-    $(thing_2).show();
-    $(thing_1).hide();
-  }
-}
-
-/* Activate in-place ajaxy editing with best_in_place */
-$(document).ready(function() {
-    jQuery(".best_in_place").best_in_place()
-});
-
-/* Bind escape key handler for add partnership form */
-$(document).ready(function(){
-    $('#partnership_name').bind('keyup', function(event) {
-      if (event.keyCode == 27) { // escape key
-        swapVisibility($('#add_partnership_link'), $('#add_partnership_form'));
+    /* Bind escape key handler for add partnership form */
+    $( "#partnership_partner_name" ).bind( 'keyup', function( event ) {
+      if ( event.keyCode == 27 && $( '#add_partnership_link' ).css( 'display' ) == 'none' ) { // escape key
+        swapVisibility( $( '#add_partnership_link' ), $( '#add_partnership_form' ) );
+        clearFields( $( '#add_partnership_form' ) )
       }
-    });
-});
+    } );
+    /* Bind enter key handler for add partnership form */
+    $( "#partnership_partner_name" ).bind( 'keypress', stopSubmitOnEnter );
+
+    /* Person autocomple forms */
+    $( "input[data-autocomplete]" ).each( function( index, element ) {
+      $( element ).autocomplete( {
+        source: function( request, response ) {
+          var xhr = $.getJSON( $( element ).attr( 'data-autocomplete' ), { term: request.term }, function( data, status, xhr ) {
+            data.unshift( {"label":"Add New Person...","id":null,"value":"_new"} );
+            response( data, status, xhr );
+          } );
+        },
+        focus: function( event, ui ) {
+          if ( ui.item.value == "_new" ) return false;
+        },
+        minLength: 2,
+        select: function( event, ui ) {
+          var $autoCompleteField = $( this );
+          if ( ui.item.value == "_new" ) {
+            $CREATE_PERSON_TARGET = $autoCompleteField;
+            $( "#create_person_dialog" ).dialog( "open" );
+            return false;
+          } else {
+            $( $autoCompleteField.attr( 'id_element' ) ).val( ui.item.id );
+            $( $autoCompleteField.context.form ).submit();
+          }
+        }
+      } );
+		} );
+
+    /* Create person modal dialog */
+    $( "#create_person_dialog" ).dialog( {
+      modal: true,
+      autoOpen: false,
+      show: "fade",
+      buttons: {
+        "Add Person": function() {
+          $( '#create_person_form' ).submit();
+        },
+        "Cancel": function() {
+          $( this ).dialog( "close" );
+        }
+      },
+      open: function() {
+        $( '#person_name' ).val( $CREATE_PERSON_TARGET.val() );
+        $( '.ui-widget-overlay' ).hide().fadeTo( 'fast', 0.7 );
+      },
+      close: function() {
+      }
+    } );
+
+    /* Create person ajax form */
+    $( "#create_person_form" )
+      .bind( "ajax:success", function( evt, data, status, xhr ) {
+        var $form = $( this );
+        data = $.parseJSON(data);
+
+        // Reset fields so form can be used again, but leave hidden_field values intact.
+        clearFields( $form );
+
+        // Insert response partial into page below the form.
+        $( $CREATE_PERSON_TARGET.attr( 'id_element' ) ).val(data.id);
+        $( $CREATE_PERSON_TARGET.context.form ).submit();
+        
+        // Hide the dialog
+        $( "#create_person_dialog" ).dialog( "close" );
+      } )
+      .bind( 'ajax:complete', function( evt, xhr, status ) {
+        $( $CREATE_PERSON_TARGET.attr( 'id_element' ) ).val('');
+      } )
+      .bind( "ajax:error", ajaxFormErrorHandler );
+  } );
+
+  function stopSubmitOnEnter(e) {
+    var eve = e || window.event;
+    var keycode = eve.keyCode || eve.which || eve.charCode;
+
+    if (keycode == 13) {
+      eve.cancelBubble = true;
+      eve.returnValue = false;
+
+      if (eve.stopPropagation) {   
+        eve.stopPropagation();
+        eve.preventDefault();
+      }
+      return false;
+    }
+  }
+
+  function clearFields( $elem ) {
+    $elem.find( 'textarea,input[type="text"],input[type="file"]' ).val( "" ).blur();
+  }
+
+  function removePartnership( id ) {
+    var options = {
+      type:       "post",
+      url:        "/partnerships/" + id,
+      dataType:   'script',
+      data:       { '_method': 'delete' },
+      success:    function() { removePartnershipSuccessCallback(id) },
+      error:      function( xhr ){ errorHandler( xhr ) },
+      beforeSend: function( xhr ){ xhr.setRequestHeader( "Accept", "application/json" ) }
+    };
+    jQuery.ajax( options );
+  }
+
+  function removePartnershipSuccessCallback( id ) {
+    $( "#partnership_"+ id ).remove();
+  }
+
+  function ajaxFormErrorHandler( evt, xhr, status, error ) {
+    errorHandler( xhr );
+  }
+
+  function errorHandler( xhr ) {
+    var errors, errorText;
+
+    try {
+      // Populate errorText with the partnership errors
+      errors = $.parseJSON( xhr.responseText );
+    } catch( err ) {
+      // If the responseText is not valid JSON (like if a 500 exception was thrown), populate errors with a generic error message.
+      errors = [ "Unknown error: Please reload the page and try again" ];
+    }
+
+    // Build the list of errors
+    errorText = "Oops! Seems there was a problem. ";
+    errorText += errors.join( ', ' );
+
+    var notice = '<div class="notice">'
+      + '<div class="notice-body">' 
+      + '<img src="/images/info.png" alt="" />'
+      + '<h3>Error</h3>'
+      + '<p>'+ errorText +'</p>'
+      + '</div>'
+      + '<div class="notice-bottom">'
+      + '</div>'
+      + '</div>';
+      
+    $( notice ).purr( {
+      usingTransparentPNG: true,
+      isSticky: true
+    } );
+  }
+
+  function swapVisibility( thing_1, thing_2 ) {
+    if ( $( thing_1 ).css( 'display' ) == 'none' ) {
+      $( thing_1 ).show();
+      $( thing_2 ).hide();
+    } else {
+      $( thing_2 ).show();
+      $( thing_1 ).hide();
+    }
+  }
 
 </script>
+
+<div id="create_person_dialog" title="Add Person">
+  <%= render :partial => 'form', :locals => { :person => Person.new } %>
+</div>
 
 <div id="infovis" class="ui-widget-content">
   <h3 class="ui-widget-header">Family Tree</h3>
@@ -249,25 +235,24 @@ $(document).ready(function(){
 
     <tr>
       <th>Father:</th>
-      <td><%= link_to(@person.father.name, @person.father) if @person.father %></td>
+      <td><%= link_to( @person.father.name, @person.father ) if @person.father %></td>
     </tr>
 
     <tr>
       <th>Mother:</th>
-      <td><%= link_to(@person.mother.name, @person.mother) if @person.mother %></td>
+      <td><%= link_to( @person.mother.name, @person.mother ) if @person.mother %></td>
     </tr>
 
     <tr>
       <th>Partners:</th>
       <td><%= render :partial => 'partnerships', :locals => { :person => @person } %>
-        <%= link_to_function( "Add new partner", "swapVisibility($('#add_partnership_form'), $('#add_partnership_link')); $('#partnership_name').focus()", :id => "add_partnership_link" ) %>
+        <%= link_to_function( "Add new partner", "swapVisibility( $( '#add_partnership_form' ), $( '#add_partnership_link' ) ); $( '#partnership_name' ).focus()", :id => "add_partnership_link" ) %>
         <div id="add_partnership_form">
           <%= form_for :partnership, :remote => true, :url => partnerships_path,
               :html => { 'data-type' => 'html', :id => 'create_partnership_form' } do |f| %>
-            <%= f.autocomplete_field :name, autocomplete_person_name_people_path, :id_element => "#partnership_partner_id" %>
-            <%= f.hidden_field(:person_id, :value => @person.id) %>
-            <%= f.hidden_field(:partner_id) %>
-            <%= f.submit "add" %>
+                Name: <%= f.autocomplete_field :partner_name, autocomplete_person_name_people_path, :id_element => "#partnership_partner_id" %>
+            <%= f.hidden_field( :person_id, :value => @person.id ) %>
+            <%= f.hidden_field( :partner_id ) %>
           <% end %>
         </div>
       </td>
@@ -280,7 +265,7 @@ $(document).ready(function(){
           if @person.children 
             @person.children.each { |child| 
           %>
-          <%= link_to(child.name, child) %>
+          <%= link_to( child.name, child ) %>
           <%
               } 
           end 
@@ -295,6 +280,6 @@ $(document).ready(function(){
   </table>
 
 
-  <%= link_to 'Edit', edit_person_path(@person) %> |
+  <%= link_to 'Edit', edit_person_path( @person ) %> |
   <%= link_to 'Back', people_path %>
 </div>

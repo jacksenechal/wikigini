@@ -17,6 +17,10 @@ class Person < ActiveRecord::Base
   belongs_to :father, :class_name => 'Person'
   # named_scope :parents, { :include => [ :mother, :father ] }
 
+  validates_length_of :name, :minimum => 1
+  validates_inclusion_of :gender, :in => %w( male female ),
+    :message => "must be specified"
+
   def children
     self.children_of_father | self.children_of_mother
   end

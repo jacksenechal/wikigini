@@ -1,10 +1,11 @@
-<%= form_for(@person) do |f| %>
-  <% if @person.errors.any? %>
+<%= form_for person, :remote => true, :url => people_path,
+  :html => { 'data-type' => 'html', :id => 'create_person_form' } do |f| %>
+  <% if person.errors.any? %>
     <div id="error_explanation">
-      <h2><%= pluralize(@person.errors.count, "error") %> prohibited this person from being saved:</h2>
+      <h2><%= pluralize(person.errors.count, "error") %> prohibited this person from being saved:</h2>
 
       <ul>
-      <% @person.errors.full_messages.each do |msg| %>
+      <% person.errors.full_messages.each do |msg| %>
         <li><%= msg %></li>
       <% end %>
       </ul>
@@ -17,25 +18,10 @@
   </div>
   <div class="field">
     <%= f.label :gender %><br />
-    <%= select_tag "person[gender]", options_for_select(["male", "female"], @person.gender) %>
-  </div>
-  <div class="field">
-    <%= f.label :father %><br />
-    <%= f.collection_select :father_id, Person.men, :id, :name, :include_blank => true %>
-  </div>
-  <div class="field">
-    <%= f.label :mother %><br />
-    <%= f.collection_select :mother_id, Person.women, :id, :name, :include_blank => true %>
-  </div>
-  <div class="field">
-    <%= f.label :partner %><br />
-    <%= f.autocomplete_field :partner_ids, autocomplete_person_name_people_path %>
-  </div>
-  <div class="field">
-    <%= f.label :bio %><br />
-    <%= f.text_area :bio %>
-  </div>
-  <div class="actions">
-    <%= f.submit %>
+    <select id="person_gender" name="person[gender]">
+      <option class="grey" value="">Select a gender</option>
+      <option value="male">Male</option> 
+      <option value="female">Female</option> 
+    </select> 
   </div>
 <% end %>

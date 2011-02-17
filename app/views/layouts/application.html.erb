@@ -1,16 +1,15 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>WikiGini</title>
-  <%= stylesheet_link_tag "scaffold" %>
-  <%= stylesheet_link_tag "main" %>
-  <%= stylesheet_link_tag "le-frog/jquery-ui.css" %>
-  <%= javascript_include_tag :defaults %>
-  <%= javascript_include_tag "autocomplete-rails.js" %>
-  <%= javascript_include_tag "jquery.purr.js" %>
-  <%= javascript_include_tag "best_in_place.js" %>
-  <%= content_for :head -%>
-  <%= csrf_meta_tag %>
+<title>WikiGini</title>
+<%= stylesheet_link_tag "scaffold" %>
+<%= stylesheet_link_tag "main" %>
+<%= stylesheet_link_tag "south-street/jquery-ui.css" %>
+<%= javascript_include_tag :defaults %>
+<%= javascript_include_tag "jquery.purr.js" %>
+<%= javascript_include_tag "best_in_place.js" %>
+<%= content_for :head -%>
+<%= csrf_meta_tag %>
 </head>
 <body <%= yield :body_tag_attributes -%>>
   <div id="page">

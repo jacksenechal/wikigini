@@ -33,6 +33,9 @@ textarea {
 ul {
   margin: 0px;
 }
+option.grey {
+  color: grey;
+}
 /* ======= Infovis ======= */
 #infovis {
   height: 400px;
@@ -71,11 +74,15 @@ div.validation-error li {
 #add_partnership_form {
   display: none;
 }
+#create_person_dialog {
+  display: none;
+}
 /* ======= jQuery Purr ======= */
 #purr-container {
   position: fixed;
   top: 0;
   right: 0;
+  z-index: 9999;
 }
 .notice {
   position: relative;
@@ -112,3 +119,10 @@ div.validation-error li {
   height: 22px;
   background: url(/images/purrBottom.png) no-repeat left top;
 }
+/* ======= jQuery UI ======= */
+.ui-autocomplete, .ui-dialog {
+  -moz-box-shadow: 2px 2px 15px #333;
+  -webkit-box-shadow: 2px 2px 15px #333;
+  box-shadow: 2px 2px 15px #333;
+}
+

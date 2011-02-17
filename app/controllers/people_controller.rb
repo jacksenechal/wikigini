@@ -42,15 +42,12 @@ class PeopleController < ApplicationController
   # POST /people
   # POST /people.xml
   def create
-    @person = Person.new(params[:person])
-
+    @person = Person.new( params[:person] )
     respond_to do |format|
       if @person.save
-        format.html { redirect_to(@person, :notice => 'Person was successfully created.') }
-        format.xml  { render :xml => @person, :status => :created, :location => @person }
+        format.json { render :json => @person, :status => :ok }
       else
-        format.html { render :action => "new" }
-        format.xml  { render :xml => @person.errors, :status => :unprocessable_entity }
+        format.json { render :json => @person.errors.to_a, :status => :unprocessable_entity }
       end
     end
   end
