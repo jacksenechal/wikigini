@@ -1,3 +1,29 @@
 <h1>New person</h1>
 
-<%= render 'form' %>
+<%= form_for @person do |f| %>
+  <% if @person.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@person.errors.count, "error") %> prohibited this person from being saved:</h2>
+
+      <ul>
+      <% @person.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :name %><br />
+    <%= f.text_field :name %>
+  </div>
+  <div class="field">
+    <%= f.label :gender %><br />
+    <select id="person_gender" name="person[gender]">
+      <option class="grey" value="">Select a gender</option>
+      <option value="male">Male</option> 
+      <option value="female">Female</option> 
+    </select> 
+  </div>
+  <%= f.submit %>
+<% end %>

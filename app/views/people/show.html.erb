@@ -212,7 +212,7 @@
 </script>
 
 <div id="create_person_dialog" title="Add Person">
-  <%= render :partial => 'form', :locals => { :person => Person.new } %>
+  <%= render :partial => 'new_remote', :locals => { :person => Person.new } %>
 </div>
 
 <div id="infovis" class="ui-widget-content">
@@ -279,7 +279,5 @@
     </tr>
   </table>
 
-
-  <%= link_to 'Edit', edit_person_path( @person ) %> |
-  <%= link_to 'Back', people_path %>
+  <p><%= link_to 'Index Of People', people_path %></p>
 </div>

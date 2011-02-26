@@ -46,8 +46,10 @@ class PeopleController < ApplicationController
     respond_to do |format|
       if @person.save
         format.json { render :json => @person, :status => :ok }
+        format.html { redirect_to @person }
       else
         format.json { render :json => @person.errors.to_a, :status => :unprocessable_entity }
+        format.html { render :action => "new" }
       end
     end
   end
