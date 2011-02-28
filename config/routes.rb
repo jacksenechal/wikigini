@@ -1,8 +1,13 @@
 WikiGini::Application.routes.draw do
   resources :people do
     get :autocomplete_person_name, :on => :collection
+    post :update_father, :on => :member
+    post :update_mother, :on => :member
   end
   resources :partnerships, :only => [ :create, :destroy ]
+  # XXX HACK this shouldn't be necessary:
+  match '/people/:id/update_father', :controller => :people, :action => :update_father
+  match '/people/:id/update_mother', :controller => :people, :action => :update_mother
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

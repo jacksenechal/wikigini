@@ -31,7 +31,7 @@ BestInPlaceEditor.prototype = {
   // Public Interface Functions //////////////////////////////////////////////
 
   activate : function() {
-		var elem = this.isNil ? "" : this.element.html();
+    var elem = this.isNil ? "" : this.element.html();
     this.oldValue = elem;
     $(this.activator).unbind("click", this.clickHandler);
     this.activateForm();
@@ -82,17 +82,18 @@ BestInPlaceEditor.prototype = {
   initOptions : function() {
     // Try parent supplied info
     var self = this;
-    self.element.parents().each(function(){
+    self.element.parents().each(function() {
       self.url           = self.url           || jQuery(this).attr("data-url");
       self.collection    = self.collection    || jQuery(this).attr("data-collection");
       self.formType      = self.formType      || jQuery(this).attr("data-type");
       self.objectName    = self.objectName    || jQuery(this).attr("data-object");
       self.attributeName = self.attributeName || jQuery(this).attr("data-attribute");
       self.nil           = self.nil           || jQuery(this).attr("data-nil");
+      self.inner_class   = self.inner_class   || jQuery(this).attr("data-inner-class");
     });
 
     // Try Rails-id based if parents did not explicitly supply something
-    self.element.parents().each(function(){
+    self.element.parents().each(function() {
       var res = this.id.match(/^(\w+)_(\d+)$/i);
       if (res) {
         self.objectName = self.objectName || res[1];
@@ -100,13 +101,24 @@ BestInPlaceEditor.prototype = {
     });
 
     // Load own attributes (overrides all others)
-    self.url           = self.element.attr("data-url")          || self.url      || document.location.pathname;
-    self.collection    = self.element.attr("data-collection")   || self.collection;
-    self.formType      = self.element.attr("data-type")         || self.formtype || "input";
-    self.objectName    = self.element.attr("data-object")       || self.objectName;
-    self.attributeName = self.element.attr("data-attribute")    || self.attributeName;
-    self.activator     = self.element.attr("data-activator")    || self.element;
-    self.nil           = self.element.attr("data-nil")          || self.nil      || "-";
+    self.url           = self.element.attr("data-url")         || self.url         || document.location.pathname;
+    self.collection    = self.element.attr("data-collection")  || self.collection;
+    self.formType      = self.element.attr("data-type")        || self.formtype    || "input";
+    self.objectName    = self.element.attr("data-object")      || self.objectName;
+    self.attributeName = self.element.attr("data-attribute")   || self.attributeName;
+    self.activator     = self.element.attr("data-activator")   || self.element;
+    self.nil           = self.element.attr("data-nil")         || self.nil         || "-";
+    self.inner_class   = self.element.attr("data-inner-class") || self.inner_class || null;
+
+    // Load up other options that the user may have chosen to include
+    self.options = [];
+    var attrs = self.element[0].attributes;
+    for ( var i=0; i < attrs.length; i++ ) {
+      matches = attrs[i].nodeName.match(/^data-(.*)$/);
+      if (matches) {
+        self.options[matches[1]] = attrs[i].nodeValue;
+      }
+    }
 
     if (!self.element.attr("data-sanitize")) {
       self.sanitize = true;
@@ -160,7 +172,7 @@ BestInPlaceEditor.prototype = {
 
     if (csrf_param !== undefined && csrf_token !== undefined) {
       data += "&" + csrf_param + "=" + encodeURIComponent(csrf_token);
-		}
+    }
     return data;
   },
 
@@ -173,8 +185,15 @@ BestInPlaceEditor.prototype = {
   // Handlers ////////////////////////////////////////////////////////////////
 
   loadSuccessCallback : function(data) {
-    this.element.html(data[this.objectName]);
-		// Binding back after being clicked
+    try {
+      var json = $.parseJSON(data);
+      this.element.html(json[this.attributeName]);
+    } catch (exception) {
+      if (typeof data == "string" && !(/^\s*$/.test(data))) {
+        this.element.html(data);
+      }
+    }
+    // Binding back after being clicked
     $(this.activator).bind('click', {editor: this}, this.clickHandler);
   },
 
@@ -187,7 +206,7 @@ BestInPlaceEditor.prototype = {
       container.purr();
     });
 
-		// Binding back after being clicked
+    // Binding back after being clicked
     $(this.activator).bind('click', {editor: this}, this.clickHandler);
   },
 
@@ -201,7 +220,11 @@ BestInPlaceEditor.forms = {
   "input" : {
     activateForm : function() {
       var output = '<form class="form_in_place" action="javascript:void(0)" style="display:inline;">';
-      output += '<input type="text" value="' + this.sanitizeValue(this.oldValue) + '"></form>';
+      output += '<input type="text" value="' + this.sanitizeValue(this.oldValue) + '"';
+      if (this.inner_class != null) {
+        output += ' class="' + this.inner_class + '"';
+      }
+      output += '></form>'
       this.element.html(output);
       this.element.find('input')[0].select();
       this.element.find("form").bind('submit', {editor: this}, BestInPlaceEditor.forms.input.submitHandler);
@@ -273,19 +296,15 @@ BestInPlaceEditor.forms = {
 
   "textarea" : {
     activateForm : function() {
-      // grab width and height of text
-      width = this.element.css('width');
-      height = this.element.css('height');
-
       // construct the form
       var output = '<form action="javascript:void(0)" style="display:inline;"><textarea>';
       output += this.sanitizeValue(this.oldValue);
       output += '</textarea></form>';
       this.element.html(output);
 
-      // set width and height of textarea
-      jQuery(this.element.find("textarea")[0]).css({ 'width': width, 'height': height });
-      
+      // dynamic height for the textarea
+      jQuery(this.element.find("textarea")[0]).elastic();
+
       this.element.find("textarea")[0].focus();
       this.element.find("textarea").bind('blur', {editor: this}, BestInPlaceEditor.forms.textarea.blurHandler);
       this.element.find("textarea").bind('keyup', {editor: this}, BestInPlaceEditor.forms.textarea.keyupHandler);
@@ -304,7 +323,7 @@ BestInPlaceEditor.forms = {
         BestInPlaceEditor.forms.textarea.abort(event.data.editor);
       }
     },
-    
+
     abort : function(editor) {
       if (confirm("Are you sure you want to discard your changes?")) {
         editor.abort();
@@ -314,8 +333,142 @@ BestInPlaceEditor.forms = {
 };
 
 jQuery.fn.best_in_place = function() {
-  this.each(function(){
+  this.each(function() {
     jQuery(this).data('bestInPlaceEditor', new BestInPlaceEditor(this));
   });
   return this;
 };
+
+
+
+/**
+* @name             Elastic
+* @descripton           Elastic is Jquery plugin that grow and shrink your textareas automaticliy
+* @version            1.6.5
+* @requires           Jquery 1.2.6+
+*
+* @author             Jan Jarfalk
+* @author-email         jan.jarfalk@unwrongest.com
+* @author-website         http://www.unwrongest.com
+*
+* @licens             MIT License - http://www.opensource.org/licenses/mit-license.php
+*/
+
+(function(jQuery) {
+  jQuery.fn.extend({
+    elastic: function() {
+      //  We will create a div clone of the textarea
+      //  by copying these attributes from the textarea to the div.
+      var mimics = [
+        'paddingTop',
+        'paddingRight',
+        'paddingBottom',
+        'paddingLeft',
+        'fontSize',
+        'lineHeight',
+        'fontFamily',
+        'width',
+        'fontWeight'];
+
+      return this.each( function() {
+
+        // Elastic only works on textareas
+        if ( this.type != 'textarea' ) {
+          return false;
+        }
+
+        var $textarea = jQuery(this),
+          $twin   = jQuery('<div />').css({'position': 'absolute','display':'none','word-wrap':'break-word'}),
+          lineHeight  = parseInt($textarea.css('line-height'),10) || parseInt($textarea.css('font-size'),'10'),
+          minheight = parseInt($textarea.css('height'),10) || lineHeight*3,
+          maxheight = parseInt($textarea.css('max-height'),10) || Number.MAX_VALUE,
+          goalheight  = 0,
+          i       = 0;
+
+        // Opera returns max-height of -1 if not set
+        if (maxheight < 0) { maxheight = Number.MAX_VALUE; }
+
+        // Append the twin to the DOM
+        // We are going to meassure the height of this, not the textarea.
+        $twin.appendTo($textarea.parent());
+
+        // Copy the essential styles (mimics) from the textarea to the twin
+        var i = mimics.length;
+        while(i--){
+          $twin.css(mimics[i].toString(),$textarea.css(mimics[i].toString()));
+        }
+
+
+        // Sets a given height and overflow state on the textarea
+        function setHeightAndOverflow(height, overflow) {
+          curratedHeight = Math.floor(parseInt(height,10));
+          if($textarea.height() != curratedHeight){
+            $textarea.css({'height': curratedHeight + 'px','overflow':overflow});
+
+          }
+        }
+
+
+        // This function will update the height of the textarea if necessary
+        function update() {
+
+          // Get curated content from the textarea.
+          var textareaContent = $textarea.val().replace(/&/g,'&amp;').replace(/  /g, '&nbsp;').replace(/<|>/g, '&gt;').replace(/\n/g, '<br />');
+
+          // Compare curated content with curated twin.
+          var twinContent = $twin.html().replace(/<br>/ig,'<br />');
+
+          if(textareaContent+'&nbsp;' != twinContent) {
+
+            // Add an extra white space so new rows are added when you are at the end of a row.
+            $twin.html(textareaContent+'&nbsp;');
+
+            // Change textarea height if twin plus the height of one line differs more than 3 pixel from textarea height
+            if(Math.abs($twin.height() + lineHeight - $textarea.height()) > 3) {
+
+              var goalheight = $twin.height()+lineHeight;
+              if(goalheight >= maxheight) {
+                setHeightAndOverflow(maxheight,'auto');
+              } else if(goalheight <= minheight) {
+                setHeightAndOverflow(minheight,'hidden');
+              } else {
+                setHeightAndOverflow(goalheight,'hidden');
+              }
+
+            }
+
+          }
+
+        }
+
+        // Hide scrollbars
+        $textarea.css({'overflow':'hidden'});
+
+        // Update textarea size on keyup, change, cut and paste
+        $textarea.bind('keyup change cut paste', function() {
+          update();
+        });
+
+        // Compact textarea on blur
+        // Lets animate this....
+        $textarea.bind('blur',function() {
+          if($twin.height() < maxheight) {
+            if($twin.height() > minheight) {
+              $textarea.height($twin.height());
+            } else {
+              $textarea.height(minheight);
+            }
+          }
+        });
+
+        // And this line is to catch the browser paste event
+        $textarea.live('input paste',function(e){ setTimeout( update, 250); });
+
+        // Run update once when elastic is initialized
+        update();
+
+      });
+
+        }
+    });
+})(jQuery);

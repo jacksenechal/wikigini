@@ -10,12 +10,15 @@ td, th {
 }
 th {
   padding-right: 10px;
+  white-space: nowrap;
 }
 h3 {
   margin: 0.5em;
 }
 textarea {
   min-height: 15em;
+  max-height: 45em;
+  width: 100%;
 }
 #page {
   width: 600px;
@@ -43,14 +46,18 @@ option.grey {
   overflow: hidden;
 }
 /* ======= Ajax forms, etc ======= */
-span.best_in_place {
+span.best_in_place, .editable {
   display: block;
   padding: 0px 4px;
   border-radius: 2px;
+}
+span.best_in_place {
   cursor: pointer;
 }
-span.best_in_place:hover {
+span.best_in_place:hover, .editable:hover {
   background-color: #eee;
+}
+span.best_in_place:hover {
   background-image: url('/images/edit.png');
   background-repeat: no-repeat;
   background-position: right top;
@@ -70,9 +77,6 @@ div.validation-error ul {
 div.validation-error li {
   list-style-type: square;
   list-style-position: inside;
-}
-#add_partnership_form {
-  display: none;
 }
 #create_person_dialog {
   display: none;

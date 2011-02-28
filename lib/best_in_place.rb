@@ -4,7 +4,7 @@ module BestInPlace
       opts[:type] ||= :input
       opts[:collection] ||= []
       field = field.to_s
-      value = object.send(field).blank? ? "" : object.send(field)
+      value = opts[:value] || object.send(field) || ""
       collection = nil
       if opts[:type] == :select && !opts[:collection].blank?
         v = object.send(field)
@@ -25,10 +25,13 @@ module BestInPlace
       out << " data-object='#{object.class.to_s.gsub("::", "_").underscore}'"
       out << " data-collection='#{collection}'" unless collection.blank?
       out << " data-attribute='#{field}'"
-      out << " data-activator='#{opts[:activator]}'" unless opts[:activator].blank?
       out << " data-sanitize='#{!!opts[:sanitize]}'" unless opts[:sanitize].nil?
-      out << " data-nil='#{opts[:nil].to_s}'" unless opts[:nil].blank?
-      out << " data-type='#{opts[:type].to_s}'>"
+      out << " data-type='#{opts[:type].to_s}'"
+      # output the rest of the given options as strings
+      (opts.keys - [:path, :collection, :sanitize, :type]).each do |opt|
+        out << " data-#{opt}='#{opts[opt]}'" unless opts[opt].blank?
+      end
+      out << ">"
       out << value.to_s
       out <<  "</span>"
       raw(out)
