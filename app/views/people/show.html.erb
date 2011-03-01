@@ -46,7 +46,12 @@
       },
 
       inputBlurHandler : function(event) {
-        event.data.editor.abort();
+        $input = $(event.target);
+        if ($input.data("list_open") === "true") {
+          // do nothing, so as not to prevent user clicks from registering!
+        } else {
+          event.data.editor.abort();
+        }
       },
 
       submitHandler : function(event) {
@@ -64,7 +69,7 @@
     $( ".best_in_place" ).best_in_place()
 
     /* Stop propogation of click event for links within a best_in_place field */
-    $( ".best_in_place a" ).each( function() {
+    $( ".best_in_place > a" ).each( function() {
       $( this ).click( function(e) {
         e.stopPropagation();
       } );
@@ -103,17 +108,23 @@
 
     function autoCompletePerson( index, element ) {
       $( element ).autocomplete( {
-        source: function( request, response ) {
+        source: function ( request, response ) {
           var xhr = $.getJSON( $( element ).attr( 'data-autocomplete' ), { term: request.term }, function( data, status, xhr ) {
             data.unshift( {"label":"Add New Person...","id":null,"value":"_new"} );
             response( data, status, xhr );
           } );
         },
-        focus: function( event, ui ) {
+        focus: function ( event, ui ) {
           if ( ui.item.value == "_new" ) return false;
         },
         minLength: 2,
-        select: function( event, ui ) {
+        open: function ( event, ui ) {
+          $( this ).data( "list_open", "true" );
+        },
+        close: function ( event, ui ) {
+          $( this ).data( "list_open", "false" );
+        },
+        select: function ( event, ui ) {
           var $autoCompleteField = $( this );
           if ( ui.item.value == "_new" ) {
             $CREATE_PERSON_TARGET = $autoCompleteField;
