@@ -38,7 +38,11 @@ function initTree(people) {
       label.id = node.id;              
       label.innerHTML = node.name;  
       label.onclick = function() {
-        document.location.href = '/people/'+node.id;
+        if (node.selected) {
+          document.location.href = '/people/'+node.id;
+        } else {
+          document.location.href = '/people/'+node.id+'/tree';
+        }
       };  
       //set label styles  
       var style = label.style;  

@@ -12,6 +12,26 @@
 <%= csrf_meta_tag %>
 </head>
 <body <%= yield :body_tag_attributes -%>>
+  <div id="topbar">
+    <div id="navigation">
+      <h4>Navigate:</h4>
+      <ul>
+        <%
+          nav = []
+          nav << link_to('View Person', person_path)          if (controller.controller_name == "people" && params[:id])
+          nav << link_to('View Tree', person_path + "/tree")  if (controller.controller_name == "people" && params[:id])
+          nav << link_to('Index Of People', people_path)
+          nav.each do |item|
+        %>
+        <li><%= item %></li>
+        <%
+          end
+        %>
+      </ul>
+      <br />
+    </div>
+  </div>
+
   <div id="page">
 
 <%= yield %>

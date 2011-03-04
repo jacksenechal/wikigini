@@ -19,6 +19,11 @@ class PeopleController < ApplicationController
     end
   end
 
+  # GET /people/1/tree
+  def tree
+    show
+  end
+
   # GET /people/new
   def new
     @person = Person.new

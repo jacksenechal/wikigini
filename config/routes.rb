@@ -1,8 +1,10 @@
 WikiGini::Application.routes.draw do
   resources :people do
-    get :autocomplete_person_name, :on => :collection
-    post :update_father, :on => :member
-    post :update_mother, :on => :member
+    get   :autocomplete_person_name,  :on => :collection
+    get   :tree,                      :on => :collection
+    get   :tree,                      :on => :member
+    post  :update_father,             :on => :member
+    post  :update_mother,             :on => :member
   end
   resources :partnerships, :only => [ :create, :destroy ]
   # XXX HACK this shouldn't be necessary:

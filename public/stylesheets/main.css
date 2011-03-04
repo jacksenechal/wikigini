@@ -15,14 +15,18 @@ th {
 h3 {
   margin: 0.5em;
 }
+h4 {
+  margin: 0.5em 0px;
+}
 textarea {
   min-height: 15em;
   max-height: 45em;
   width: 100%;
 }
 #page {
-  width: 600px;
+  width: 700px;
   margin: auto;
+  margin-top: 5em;
 }
 .left {
   float: left;
@@ -38,6 +42,43 @@ ul {
 }
 option.grey {
   color: grey;
+}
+#topbar {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  background-color: #333;
+  width: 100%;
+  -moz-box-shadow: 0px 0px 15px #333;
+  -webkit-box-shadow: 0px 0px 15px #333;
+  box-shadow: 0px 0px 15px #333;
+}
+#navigation {
+  width: 700px;
+  margin: .5em auto;
+}
+#navigation h4 {
+  float: left;
+  color: #eee;
+  margin: 0px 0px;
+}
+#navigation ul {
+  float: left;
+  padding: 0px;
+}
+#navigation li {
+  float: left;
+  color: #eee;
+  list-style: none;
+  margin-left: 3em;
+}
+#navigation li > a {
+  color: #bbb;
+  text-decoration: none;
+}
+#navigation li > a:hover {
+  color: #eee;
+  background: none;
 }
 /* ======= Infovis ======= */
 #infovis {

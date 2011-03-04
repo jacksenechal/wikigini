@@ -1,20 +1,7 @@
-<%- content_for( :head ) do -%>
-<%= javascript_include_tag "jit" -%>
-<%= javascript_include_tag "tree" -%>
-<%= stylesheet_link_tag "jit-spacetree" -%>
-<%- end -%>
-
 <script type="text/javascript">
   $( function() {
     // global variable (I know, I know...) to store the current target of the create person dialog
     var $CREATE_PERSON_TARGET = null;
-
-    /* JavaScript Infovis Toolkit (JIT)
-    ** =========================================================*/
-
-    /* Initialize the JIT family tree visualization (tree.js) */
-    var people = <%= strip_tags( @person.ancestry_json ) %>;
-    initTree( people );
 
     /* Best In Place :: in-place editing with ajax
     ** =========================================================*/
@@ -275,12 +262,8 @@
   <%= render :partial => 'new_remote', :locals => { :person => Person.new } %>
 </div>
 
-<div id="infovis" class="ui-widget-content">
-  <h3 class="ui-widget-header">Family Tree</h3>
-</div>    
-
 <div id="content">
-  <p id="notice"><%= notice %></p>
+  <h2><%=h @person.name %></h2>
 
   <table data-nil="<span class='nil'>Click to edit</span>">
     <tr>
@@ -357,6 +340,4 @@
       <td><%= best_in_place @person, :bio, :type => :textarea, :nil => '<span class="nil">Click to add a biography</span>' %></td>
     </tr>
   </table>
-
-  <p><%= link_to 'Index Of People', people_path %></p>
 </div>
