@@ -1,12 +1,17 @@
 WikiGini::Application.routes.draw do
   resources :people do
-    get   :autocomplete_person_name,  :on => :collection
-    get   :tree,                      :on => :collection
-    get   :tree,                      :on => :member
-    post  :update_father,             :on => :member
-    post  :update_mother,             :on => :member
+    member do
+      get   :tree
+      post  :update_father
+      post  :update_mother
+    end
+    collection do
+      get   :autocomplete_person_name
+      get   :tree
+    end
   end
   resources :partnerships, :only => [ :create, :destroy ]
+
   # XXX HACK this shouldn't be necessary:
   match '/people/:id/update_father', :controller => :people, :action => :update_father
   match '/people/:id/update_mother', :controller => :people, :action => :update_mother
@@ -60,7 +65,7 @@ WikiGini::Application.routes.draw do
 
   # You can have the root of your site routed with "root"
   # just remember to delete public/index.html.
-  # root :to => "welcome#index"
+  # root :to => "people#index"
 
   # See how all your routes lay out with "rake routes"
 

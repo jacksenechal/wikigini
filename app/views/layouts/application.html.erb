@@ -18,9 +18,11 @@
       <ul>
         <%
           nav = []
+          nav << link_to('Index Of People', people_path)
+          nav << link_to('New Person', new_person_path)
+          nav << "|"                                          if (controller.controller_name == "people" && params[:id])
           nav << link_to('View Person', person_path)          if (controller.controller_name == "people" && params[:id])
           nav << link_to('View Tree', person_path + "/tree")  if (controller.controller_name == "people" && params[:id])
-          nav << link_to('Index Of People', people_path)
           nav.each do |item|
         %>
         <li><%= item %></li>
