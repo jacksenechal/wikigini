@@ -277,6 +277,16 @@
     </tr>
 
     <tr>
+      <th>Date of Birth:</th>
+      <td><%= best_in_place @person, :date_of_birth, :type => :input %></td>
+    </tr>
+
+    <tr>
+      <th>Date of Death:</th>
+      <td><%= best_in_place @person, :date_of_death, :type => :input %></td>
+    </tr>
+
+    <tr>
       <th>Father:</th>
       <td><%= best_in_place( @person, :father_id, {
           :type => :autocomplete, 

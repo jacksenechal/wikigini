@@ -1,5 +1,5 @@
 class PeopleController < ApplicationController
-  autocomplete :person, :name
+  autocomplete :person, :name, :display_value => :autocomplete_name
 
   # GET /people
   def index
@@ -62,7 +62,7 @@ class PeopleController < ApplicationController
         format.json  { render :json => @person, :status => :ok }
       else
         format.html { render :action => "edit" }
-        format.json  { render :xml => @person.errors, :status => :unprocessable_entity }
+        format.json { render :json => @person.errors.to_a, :status => :unprocessable_entity }
       end
     end
   end

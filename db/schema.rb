@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110102015152) do
+ActiveRecord::Schema.define(:version => 20110506071943) do
 
   create_table "partnerships", :force => true do |t|
     t.integer "person_id"
@@ -28,6 +28,8 @@ ActiveRecord::Schema.define(:version => 20110102015152) do
     t.text     "bio"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.date     "date_of_birth"
+    t.date     "date_of_death"
   end
 
 end

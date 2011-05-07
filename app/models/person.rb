@@ -20,6 +20,18 @@ class Person < ActiveRecord::Base
   validates_length_of :name, :minimum => 1
   validates_inclusion_of :gender, :in => %w( male female ),
     :message => "must be specified"
+  validates_date :date_of_birth, {
+    :on_or_before => :today,
+    :on_or_before_message => "must be before today",
+    :on_or_before => :date_of_death,
+    :on_or_before_message => "must be before date of death"
+  }
+  validates_date :date_of_death, {
+    :on_or_before => :today,
+    :on_or_before_message => "must be before today",
+    :on_or_after => :date_of_birth,
+    :on_or_after_message => "must be after date of birth"
+  }
 
   def children
     self.children_of_father | self.children_of_mother
@@ -30,6 +42,12 @@ class Person < ActiveRecord::Base
     parents.push self.mother if self.mother
     parents.push self.father if self.father
     parents
+  end
+
+  def autocomplete_name
+    date_of_birth = self.date_of_birth || "-"
+    date_of_death = self.date_of_death || "-"
+    "#{self.name} [b. #{date_of_birth}, d. #{date_of_death}]"
   end
 
   def ancestry_json
