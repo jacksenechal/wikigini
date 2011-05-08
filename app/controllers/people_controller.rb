@@ -33,11 +33,6 @@ class PeopleController < ApplicationController
     end
   end
 
-  # GET /people/1/edit
-  def edit
-    @person = Person.find( params[:id] )
-  end
-
   # POST /people
   def create
     @person = Person.new( params[:person] )
@@ -61,7 +56,6 @@ class PeopleController < ApplicationController
         format.html { redirect_to(@person, :notice => 'Person was successfully updated.') }
         format.json  { render :json => @person, :status => :ok }
       else
-        format.html { render :action => "edit" }
         format.json { render :json => @person.errors.to_a, :status => :unprocessable_entity }
       end
     end
@@ -75,7 +69,7 @@ class PeopleController < ApplicationController
       if @person.update_attributes( params[:person] )
         format.html { render :partial => "person", :locals => { :person => @person.mother }, :status => :ok }
       else
-        format.html { render :action => "edit" }
+        format.json { render :json => @person.errors.to_a, :status => :unprocessable_entity }
       end
     end
   end
@@ -88,7 +82,7 @@ class PeopleController < ApplicationController
       if @person.update_attributes( params[:person] )
         format.html { render :partial => "person", :locals => { :person => @person.father }, :status => :ok }
       else
-        format.html { render :action => "edit" }
+        format.json { render :json => @person.errors.to_a, :status => :unprocessable_entity }
       end
     end
   end

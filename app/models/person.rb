@@ -32,6 +32,14 @@ class Person < ActiveRecord::Base
     :on_or_after => :date_of_birth,
     :on_or_after_message => "must be after date of birth"
   }
+  validate :cannot_be_own_parent
+
+  def cannot_be_own_parent
+    if self == self.mother or self == self.father
+      errors.add(:base, 'Cannot add a person as their own parent or child.')
+    end
+  end
+
 
   def children
     self.children_of_father | self.children_of_mother
@@ -45,9 +53,15 @@ class Person < ActiveRecord::Base
   end
 
   def autocomplete_name
-    date_of_birth = self.date_of_birth || "-"
-    date_of_death = self.date_of_death || "-"
-    "#{self.name} [b. #{date_of_birth}, d. #{date_of_death}]"
+    dates_arr = []
+    dates_arr << "b. #{self.date_of_birth.year}" rescue nil
+    dates_arr << "d. #{self.date_of_death.year}" rescue nil
+    if dates_arr.empty?
+      dates = ""
+    else
+      dates = " [#{dates_arr.join(', ')}]"
+    end
+    "#{self.name}#{dates}"
   end
 
   def ancestry_json

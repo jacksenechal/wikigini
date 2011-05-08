@@ -52,6 +52,16 @@
       }
     }
 
+    BestInPlaceEditor.prototype.loadErrorCallback = function(request, error) {
+      this.element.html( this.oldValue );
+
+      // Display all error messages from server side validation
+      errorHandler( request );
+
+      // Binding back after being clicked
+      $( this.activator ).bind( 'click', { editor: this }, this.clickHandler );
+    };
+
     /* Activate in-place ajaxy editing with best_in_place */
     $( ".best_in_place" ).best_in_place()
 
@@ -219,7 +229,7 @@
     var errors, errorText;
 
     try {
-      // Populate errorText with the partnership errors
+      // Populate errorText with the json errors
       errors = $.parseJSON( xhr.responseText );
     } catch( err ) {
       // If the responseText is not valid JSON (like if a 500 exception was thrown), populate errors with a generic error message.
