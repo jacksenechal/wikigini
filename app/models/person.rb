@@ -24,13 +24,15 @@ class Person < ActiveRecord::Base
     :on_or_before => :today,
     :on_or_before_message => "must be before today",
     :on_or_before => :date_of_death,
-    :on_or_before_message => "must be before date of death"
+    :on_or_before_message => "must be before date of death",
+    :allow_blank => true
   }
   validates_date :date_of_death, {
     :on_or_before => :today,
     :on_or_before_message => "must be before today",
     :on_or_after => :date_of_birth,
-    :on_or_after_message => "must be after date of birth"
+    :on_or_after_message => "must be after date of birth",
+    :allow_blank => true
   }
   validate :cannot_be_own_parent
 
@@ -40,9 +42,32 @@ class Person < ActiveRecord::Base
     end
   end
 
-
   def children
     self.children_of_father | self.children_of_mother
+  end
+
+  def add_child( child )
+    if self.gender == 'male'
+      self.children_of_father += [child]
+    elsif self.gender == 'female'
+      self.children_of_mother += [child]
+    else
+      errors.add(:base, 'Cannot determine person\'s gender.')
+    end
+  end
+
+  def remove_child( child )
+    if self.gender == 'male'
+      self.children_of_father -= [child]
+    elsif self.gender == 'female'
+      self.children_of_mother -= [child]
+    else
+      errors.add(:base, 'Cannot determine person\'s gender.')
+    end
+  end
+
+  def children_ids
+    self.children_of_father_ids | self.children_of_mother_ids
   end
 
   def parents

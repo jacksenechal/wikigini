@@ -9,6 +9,7 @@ WikiGini::Application.routes.draw do
       get   :autocomplete_person_name
       get   :tree
     end
+    resources :children, :only => [ :create, :destroy ]
   end
   resources :partnerships, :only => [ :create, :destroy ]
 

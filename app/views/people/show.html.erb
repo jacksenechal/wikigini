@@ -15,7 +15,7 @@
         output += this.options.autocomplete ? ' data-autocomplete="'  + this.options.autocomplete + '"' : '';
         output += this.options.id_element   ? ' data-id_element="#'   + this.options.id_element   + '"' : '';
         output += ' />';
-        output += this.options.id_element
+        output += this.options.id_element 
           ? '<input type="hidden" id="' + this.options.id_element + '" name="' + this.options.id_element_name + '" />'
           : '';
         output += '</form>';
@@ -50,7 +50,7 @@
           event.data.editor.abort();
         }
       }
-    }
+    };
 
     BestInPlaceEditor.prototype.loadErrorCallback = function(request, error) {
       this.element.html( this.oldValue );
@@ -63,7 +63,7 @@
     };
 
     /* Activate in-place ajaxy editing with best_in_place */
-    $( ".best_in_place" ).best_in_place()
+    $( ".best_in_place" ).best_in_place();
 
     /* Stop propogation of click event for links within a best_in_place field */
     $( ".best_in_place > a" ).each( function() {
@@ -91,11 +91,36 @@
     $( "#partnership_partner_name" ).bind( 'keyup', function( event ) {
       if ( event.keyCode == 27 && $( '#add_partnership_link' ).css( 'display' ) == 'none' ) { // escape key
         swapVisibility( $( '#add_partnership_link' ), $( '#add_partnership_form_container' ) );
-        clearFields( $( '#add_partnership_form' ) )
+        clearFields( $( '#add_partnership_form' ) );
       }
     } );
     /* Bind enter key handler for add partnership form */
     $( "#partnership_partner_name" ).bind( 'keypress', stopSubmitOnEnter );
+
+    /* Children
+    ** =========================================================*/
+
+    /* Child form */
+    $( '#add_child_form' )
+      .bind( "ajax:success", function( evt, data, status, xhr ) {
+        var $form = $( this );
+        clearFields( $form );
+        $( '#children' ).append( xhr.responseText );
+        swapVisibility( $( '#add_child_link' ), $( '#add_child_form_container' ) );
+      } )
+      .bind( 'ajax:complete', function( evt, xhr, status ) {
+        $( "#child_id" ).val( '' );
+      } )
+      .bind( "ajax:error", ajaxFormErrorHandler );
+    /* Bind escape key handler for add child form */
+    $( "#child_partner_name" ).bind( 'keyup', function( event ) {
+      if ( event.keyCode == 27 && $( '#add_child_link' ).css( 'display' ) == 'none' ) { // escape key
+        swapVisibility( $( '#add_child_link' ), $( '#add_child_form_container' ) );
+        clearFields( $( '#add_child_form' ) );
+      }
+    } );
+    /* Bind enter key handler for add child form */
+    $( "#child_name" ).bind( 'keypress', stopSubmitOnEnter );
 
     /* Autocomplete for Person related fields
     ** =========================================================*/
@@ -210,15 +235,32 @@
       url:        "/partnerships/" + id,
       dataType:   'script',
       data:       { '_method': 'delete' },
-      success:    function() { removePartnershipSuccessCallback(id) },
-      error:      function( xhr ){ errorHandler( xhr ) },
-      beforeSend: function( xhr ){ xhr.setRequestHeader( "Accept", "application/json" ) }
+      success:    function() { removePartnershipSuccessCallback(id); },
+      error:      function( xhr ){ errorHandler( xhr ); },
+      beforeSend: function( xhr ){ xhr.setRequestHeader( "Accept", "application/json" ); }
     };
     jQuery.ajax( options );
   }
 
   function removePartnershipSuccessCallback( id ) {
     $( "#partnership_"+ id ).remove();
+  }
+
+  function removeChildOfPerson( person_id, child_id ) {
+    var options = {
+      type:       "post",
+      url:        "/people/" + person_id + "/children/" + child_id,
+      dataType:   'script',
+      data:       { '_method': 'delete' },
+      success:    function() { removeChildSuccessCallback(child_id); },
+      error:      function( xhr ){ errorHandler( xhr ); },
+      beforeSend: function( xhr ){ xhr.setRequestHeader( "Accept", "application/json" ); }
+    };
+    jQuery.ajax( options );
+  }
+
+  function removeChildSuccessCallback( id ) {
+    $( "#child_"+ id ).remove();
   }
 
   function ajaxFormErrorHandler( evt, xhr, status, error ) {
@@ -343,15 +385,17 @@
     <tr>
       <th>Children:</th>
       <td>
-        <% 
-          if @person.children 
-            @person.children.each { |child| 
-          %>
-          <%= link_to( child.name, child ) %>
-          <%
-              } 
-          end 
-        %>
+        <div class="editable">
+          <%= render :partial => 'children', :locals => { :person => @person } %>
+          <%= link_to_function( "Add new child", "swapVisibility( $( '#add_child_form_container' ), $( '#add_child_link' ) ); $( '#child_name' ).focus()", :id => "add_child_link" ) %>
+          <div id="add_child_form_container" style="display: none;">
+            <%= form_for :child, :remote => true, :url => person_children_path(@person),
+                :html => { 'data-type' => 'html', :id => 'add_child_form' } do |f| %>
+                  Name: <%= f.autocomplete_field :child_name, autocomplete_person_name_people_path, :"data-id_element" => "#child_child_id" %>
+              <%= f.hidden_field( :child_id ) %>
+            <% end %>
+          </div>
+        </div>
       </td>
     </tr>
 

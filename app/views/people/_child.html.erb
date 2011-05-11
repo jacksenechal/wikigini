@@ -1,0 +1,4 @@
+<div class="child" id="child_<%= child.id %>">
+  <%= render :partial => "people/person", :locals => { :person => child } %>
+  <%= link_to_function( 'x', "removeChildOfPerson(" + person.id.to_s + ", " + child.id.to_s + ")" ) %>
+</div>
