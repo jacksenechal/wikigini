@@ -24,8 +24,7 @@ textarea {
   width: 100%;
 }
 #page {
-  width: 700px;
-  margin: auto;
+  margin: 2em;
   margin-top: 5em;
 }
 .left {
@@ -45,6 +44,23 @@ option.grey {
 }
 tr.hover:hover {
   background-color: #eee;
+}
+#infovis {
+  height: 600px;
+  width: 65%;
+  overflow: hidden;
+  float: left;
+  margin: 0;
+}
+#vitals {
+  float: left;
+  width: 33%;
+  padding-left: 1em;
+  margin: 0;
+}
+#bio {
+  clear: left;
+  padding-top: 2em;
 }
 /* ======= Navigation ======= */
 #topbar {
@@ -83,12 +99,6 @@ tr.hover:hover {
 #navigation li > a:hover {
   color: #eee;
   background: none;
-}
-/* ======= Infovis ======= */
-#infovis {
-  height: 600px;
-  width: 100%;
-  overflow: hidden;
 }
 /* ======= Ajax forms, etc ======= */
 span.best_in_place, .editable {

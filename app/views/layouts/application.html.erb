@@ -1,5 +1,5 @@
-<!DOCTYPE html>
-<html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <title>WikiGini</title>
 <%= stylesheet_link_tag "scaffold" %>
@@ -20,9 +20,6 @@
           nav = []
           nav << link_to('Index Of People', people_path)
           nav << link_to('New Person', new_person_path)
-          nav << "|"                                          if (controller.controller_name == "people" && params[:id])
-          nav << link_to('View Person', person_path)          if (controller.controller_name == "people" && params[:id])
-          nav << link_to('View Tree', person_path + "/tree")  if (controller.controller_name == "people" && params[:id])
           nav.each do |item|
         %>
         <li><%= item %></li>

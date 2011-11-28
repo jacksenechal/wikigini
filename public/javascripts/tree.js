@@ -10,11 +10,11 @@ function initTree(people) {
     //set distance between node and its children
     levelDistance: 33,
     //set the number of levels to show
-    levelsToShow: 3,
+    levelsToShow: 10,
     //enable panning
     Navigation: {
-      enable:true,
-      panning:true
+      enable:false,
+      panning:false
     },
     //set node and edge styles
     //set overridable=true for styling individual
@@ -45,7 +45,7 @@ function initTree(people) {
         if (node.selected) {
           document.location.href = '/people/'+node.id;
         } else {
-          document.location.href = '/people/'+node.id+'/tree';
+          document.location.href = '/people/'+node.id;
         }
       };
       //set label styles
@@ -71,15 +71,6 @@ function initTree(people) {
       if (node.selected) {
         node.data.$color = "#ff7";
       }
-      else {
-        delete node.data.$color;
-        //if the node belongs to the last plotted level
-        if(!node.anySubnode("exist")) {
-          //count children number
-          var count = 0;
-          node.eachSubnode(function(n) { count++; });
-        }
-      }
     },
 
     //This method is called right before plotting
@@ -103,8 +94,6 @@ function initTree(people) {
   //compute node positions and layout
   st.compute();
   st.select(st.root);
-
-  $( "#infovis" ).resizable();
 }
 
 
