@@ -8,7 +8,7 @@ function initTree(people) {
     //id of viz container element
     injectInto: 'infovis',
     //set distance between node and its children
-    levelDistance: 30,
+    levelDistance: 33,
     //set the number of levels to show
     levelsToShow: 3,
     //enable panning
@@ -20,18 +20,19 @@ function initTree(people) {
     //set overridable=true for styling individual
     //nodes or edges
     Node: {
-      height: 20,
-      width: 80,
+      width: 90,
+      height: 55,
       type: 'rectangle',
-      color: '#aaa',
+      color: '#ccc',
       autoHeight: false,
-      autoWidth: true,
+      autoWidth: false,
       overridable: true
     },
 
     Edge: {
       type: 'bezier',
-      overridable: true
+      overridable: true,
+      color: '#333'
     },
 
     //This method is called on DOM label creation.
@@ -49,13 +50,14 @@ function initTree(people) {
       };
       //set label styles
       var style = label.style;
-      style.width = '';
-      style.height = '';
+      style.width = '84px';
+      style.height = '49px';
+      style.padding = '0px';
       style.cursor = 'pointer';
       style.color = '#333';
+      style.fontWeight = 'bold';
       style.fontSize = '0.8em';
       style.textAlign= 'center';
-      style.padding = '16px';
     },
 
     //This method is called right before plotting
@@ -76,9 +78,6 @@ function initTree(people) {
           //count children number
           var count = 0;
           node.eachSubnode(function(n) { count++; });
-          //assign a node color based on
-          //how many children it has
-          node.data.$color = ['#aaa', '#baa', '#caa', '#daa', '#eaa', '#faa'][count];
         }
       }
     },
