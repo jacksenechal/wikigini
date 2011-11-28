@@ -91,25 +91,38 @@ class Person < ActiveRecord::Base
 
   def ancestry_json
     # add the person
-    people = self.attributes.to_hash
+    person = self.attributes.to_hash
     # add the children
-    people['children'] = []
+    person['children'] = []
     self.children_of_father.each do |child|
-      people['children'].push child.attributes.to_hash.merge({ 'data' => { '$orn' => 'top' } })
+      person['children'].push child.attributes.to_hash.merge({ 'data' => { '$orn' => 'top' } })
     end
     self.children_of_mother.each do |child|
-      people['children'].push child.attributes.to_hash.merge({ 'data' => { '$orn' => 'top' } })
+      person['children'].push child.attributes.to_hash.merge({ 'data' => { '$orn' => 'top' } })
     end
     # add the partners
     self.partners.each do |partner|
-      people['children'].push partner.attributes.to_hash.merge({ 'data' => { '$orn' => 'left' } })
+      person['children'].push partner.attributes.to_hash.merge({ 'data' => { '$orn' => 'left' } })
     end
-    # add the parents
+    # add the ancestors
     self.parents.each do |parent|
-      people['children'].push parent.attributes.to_hash.merge({ 'data' => { '$orn' => 'bottom' } })
+      # "children" here refers to descendents of the central object in the graph, not the genealogical
+      # relationship. This line adds the current parent.
+      person['children'].push parent.attributes.to_hash.merge({ 'data' => { '$orn' => 'bottom' } })
+      # add the grandparents for this parent
+      grandparents = person['children'].last['children'] = []
+      parent.parents.each do |grandparent|
+        grandparents.push grandparent.attributes.to_hash.merge({ 'data' => { '$orn' => 'bottom' } })
+        # add the great grandparents for this grandparent
+        great_grandparents = grandparents.last['children'] = []
+        grandparent.parents.each do |great_grandparent|
+          puts "great grandparent: #{great_grandparent.name}"
+          great_grandparents.push great_grandparent.attributes.to_hash.merge({ 'data' => { '$orn' => 'bottom' } })
+        end
+      end
     end
     # return json
-    people.to_json
+    person.to_json
   end
 
   def self.men(conditions = {})
