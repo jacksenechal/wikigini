@@ -8,7 +8,7 @@
 
 <% @people.each do |person| %>
   <tr class="hover">
-    <td><%= link_to person.name, person_path(person) + "/tree" %></td>
+    <td><%= link_to person.name, person_path(person) %></td>
     <td><%= link_to 'Destroy', person, :confirm => 'Are you sure?', :method => :delete %></td>
   </tr>
 <% end %>

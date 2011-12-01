@@ -11,6 +11,8 @@ function initTree(people) {
     levelDistance: 33,
     //set the number of levels to show
     levelsToShow: 10,
+    //don't constrain the number of nodes shown
+    constrained: false,
     //enable panning
     Navigation: {
       enable:false,
@@ -94,6 +96,7 @@ function initTree(people) {
   //compute node positions and layout
   st.compute();
   st.select(st.root);
+  //XXX $jit.EdgeHelper.line.render({ x: 10, y: 30 }, { x: 10, y: 500 }, st.canvas);
 }
 
 
