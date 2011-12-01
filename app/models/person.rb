@@ -91,29 +91,26 @@ class Person < ActiveRecord::Base
 
   def ancestry_json
     # add the person
-    person_hash = self.attributes.to_hash
-    person_hash['children'] = []
+    person = self.attributes.to_hash
+    # add the children
+    person['children'] = []
+    self.children_of_father.each do |child|
+      person['children'].push child.attributes.to_hash.merge({ 'data' => { '$orn' => 'top' } })
+    end
+    self.children_of_mother.each do |child|
+      person['children'].push child.attributes.to_hash.merge({ 'data' => { '$orn' => 'top' } })
+    end
     # add the partners
     self.partners.each do |partner|
-      partner_hash = partner.attributes.to_hash.merge({ 'data' => { '$orn' => 'left' } })
-      # add the children for this partner
-      partner_hash['children'] = []
-      partner.children_of_father.each do |child|
-        partner_hash['children'].push child.attributes.to_hash.merge({ 'data' => { '$orn' => 'top' } })
-      end
-      partner.children_of_mother.each do |child|
-        partner_hash['children'].push child.attributes.to_hash.merge({ 'data' => { '$orn' => 'top' } })
-      end
-      # add the partner
-      person_hash['children'].push partner_hash
+      person['children'].push partner.attributes.to_hash.merge({ 'data' => { '$orn' => 'left' } })
     end
     # add the ancestors
     self.parents.each do |parent|
       # "children" here refers to descendents of the central object in the graph, not the genealogical
       # relationship. This line adds the current parent.
-      person_hash['children'].push parent.attributes.to_hash.merge({ 'data' => { '$orn' => 'bottom' } })
+      person['children'].push parent.attributes.to_hash.merge({ 'data' => { '$orn' => 'bottom' } })
       # add the grandparents for this parent
-      grandparents = person_hash['children'].last['children'] = []
+      grandparents = person['children'].last['children'] = []
       parent.parents.each do |grandparent|
         grandparents.push grandparent.attributes.to_hash.merge({ 'data' => { '$orn' => 'bottom' } })
         # add the great grandparents for this grandparent
@@ -125,7 +122,7 @@ class Person < ActiveRecord::Base
       end
     end
     # return json
-    person_hash.to_json
+    person.to_json
   end
 
   def self.men(conditions = {})
