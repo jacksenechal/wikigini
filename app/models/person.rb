@@ -11,7 +11,7 @@ class Person < ActiveRecord::Base
         'OR (ps.person_id = #{id} AND ps.partner_id = p.id) '+
       'ORDER BY ps.date_started'
   has_many :defacto_partners, :class_name => 'Person', :finder_sql =>
-    'SELECT DISTINCT p.* '+
+    'SELECT DISTINCT p.*, q.date_of_birth '+
       'FROM people p, people q '+
       'WHERE (q.father_id = #{id} AND q.mother_id = p.id) '+
         'OR  (q.mother_id = #{id} AND q.father_id = p.id) '+
