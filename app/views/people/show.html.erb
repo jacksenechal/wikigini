@@ -1,20 +1,10 @@
 <%- content_for( :head ) do -%>
-<%= javascript_include_tag "jit" -%>
-<%= javascript_include_tag "tree" -%>
-<%= stylesheet_link_tag "jit-spacetree" -%>
 <%- end -%>
 
 <script type="text/javascript">
   $( function() {
     // global variable (I know, I know...) to store the current target of the create person dialog
     var $CREATE_PERSON_TARGET = null;
-
-    /* JavaScript Infovis Toolkit (JIT)
-    ** =========================================================*/
-
-    /* Initialize the JIT family tree visualization (tree.js) */
-    var people = <%= strip_tags( @person.ancestry_json ) %>;
-    initTree( people );
 
     /* Best In Place :: in-place editing with ajax
     ** =========================================================*/
@@ -330,9 +320,7 @@
 <div id="content">
   <h2><%=h @person.name %></h2>
 
-  <div id="infovis" class="ui-widget-content">
-    <h3 class="ui-widget-header">Family Tree</h3>
-  </div>
+  <%= render :partial => 'tree', :locals => { :person => @person } %>
 
   <div id="vitals">
     <h3 class="ui-widget-header">Information</h3>

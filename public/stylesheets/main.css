@@ -184,4 +184,31 @@ div.validation-error li {
   -webkit-box-shadow: 2px 2px 15px #333;
   box-shadow: 2px 2px 15px #333;
 }
-
+/* ======= Tree ======= */
+table.tree {
+  border-spacing: 0px;
+  border-collapse: collapse;
+  width: 800px;
+}
+table.tree tr.greatgrandparents td {
+  width: 100px;
+}
+table.tree td {
+  padding: 0px;
+  background-color: #e9e9e9;
+}
+a.tree_node {
+  display: block;
+  background-color: #eee;
+  border: 1px solid #ccc;
+  width: 90px;
+  height: 40px;
+  padding: 3px;
+  text-decoration: none;
+  font-size: 10px;
+  margin: 10px auto;
+  overflow: hidden;
+}
+a.tree_node .name {
+  font-weight: bold;
+}

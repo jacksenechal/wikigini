@@ -4,7 +4,7 @@ class Person < ActiveRecord::Base
       'FROM partnerships ps '+
       'WHERE ps.person_id = #{id} OR ps.partner_id = #{id} '+
       'ORDER BY ps.date_started'
-  has_many :partners, :class_name => 'Person', :finder_sql => 
+  has_many :partners, :class_name => 'Person', :finder_sql =>
     'SELECT DISTINCT p.*, ps.date_started '+
       'FROM people p, partnerships ps '+
       'WHERE (ps.partner_id = #{id} AND ps.person_id = p.id) '+
@@ -44,6 +44,14 @@ class Person < ActiveRecord::Base
 
   def children
     self.children_of_father | self.children_of_mother
+  end
+
+  def children_with( person )
+    self.children & person.children rescue []
+  end
+
+  def children_with_unknown
+    self.children.find_all { |child| !(child.mother_id && child.father_id) }
   end
 
   def add_child( child )

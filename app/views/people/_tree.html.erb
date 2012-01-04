@@ -1,0 +1,31 @@
+<table class="tree">
+  <tr class="greatgrandparents">
+    <td><%= tree_node person.mother.mother.mother rescue nil %></td>
+    <td><%= tree_node person.mother.mother.father rescue nil %></td>
+    <td><%= tree_node person.mother.father.mother rescue nil %></td>
+    <td><%= tree_node person.mother.father.father rescue nil %></td>
+    <td><%= tree_node person.father.mother.mother rescue nil %></td>
+    <td><%= tree_node person.father.mother.father rescue nil %></td>
+    <td><%= tree_node person.father.father.mother rescue nil %></td>
+    <td><%= tree_node person.father.father.father rescue nil %></td>
+  </tr>
+  <tr class="grandparents">
+    <td colspan="2"><%= tree_node person.mother.mother rescue nil %></td>
+    <td colspan="2"><%= tree_node person.mother.father rescue nil %></td>
+    <td colspan="2"><%= tree_node person.father.mother rescue nil %></td>
+    <td colspan="2"><%= tree_node person.father.father rescue nil %></td>
+  </tr>
+  <tr class="parents">
+    <td colspan="4"><%= tree_node person.mother rescue nil %></td>
+    <td colspan="4"><%= tree_node person.father rescue nil %></td>
+  </tr>
+  <tr>
+    <td><%= tree_node person.partners[4] %><%= children_with_partner person.partners[4] %></td>
+    <td><%= tree_node person.partners[2] %><%= children_with_partner person.partners[2] %></td>
+    <td><%= tree_node person.partners[0] %><%= children_with_partner person.partners[0] %></td>
+    <td colspan="2"><%= tree_node person %><%= children_with_unknown %></td>
+    <td><%= tree_node person.partners[1] %><%= children_with_partner person.partners[1] %></td>
+    <td><%= tree_node person.partners[3] %><%= children_with_partner person.partners[3] %></td>
+    <td><%= tree_node person.partners[5] %><%= children_with_partner person.partners[5] %></td>
+  </tr>
+</table>
