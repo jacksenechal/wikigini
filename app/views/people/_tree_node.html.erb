@@ -1,3 +1,10 @@
-<a href="<%= url_for person %>" class="tree_node">
-  <span class="name"><%= person ? person.name : 'ERROR' %></span>
-</a>
+<% if person %>
+  <div class="node">
+    <a href="<%= url_for person %>" class="node">
+      <span class="name"><%= person.name %></span>
+    </a>
+  </div>
+<% else %>
+  <div class="empty_node">
+  </div>
+<% end %>

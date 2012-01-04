@@ -1,6 +1,3 @@
-<%- content_for( :head ) do -%>
-<%- end -%>
-
 <script type="text/javascript">
   $( function() {
     // global variable (I know, I know...) to store the current target of the create person dialog
@@ -320,95 +317,99 @@
 <div id="content">
   <h2><%=h @person.name %></h2>
 
-  <%= render :partial => 'tree', :locals => { :person => @person } %>
-
-  <div id="vitals">
-    <h3 class="ui-widget-header">Information</h3>
-    <table data-nil="<span class='nil'>Click to edit</span>">
-      <tr>
-        <th>Name:</th>
-        <td width="100%"><%= best_in_place @person, :name, :type => :input %></td>
-      </tr>
-
-      <tr>
-        <th>Gender:</th>
-        <td><%= best_in_place @person, :gender, :type => :select, :collection => [ ['male', 'male'], ['female', 'female'] ] %></td>
-      </tr>
-
-      <tr>
-        <th>Date of Birth:</th>
-        <td><%= best_in_place @person, :date_of_birth, :type => :input %></td>
-      </tr>
-
-      <tr>
-        <th>Date of Death:</th>
-        <td><%= best_in_place @person, :date_of_death, :type => :input %></td>
-      </tr>
-
-      <tr>
-        <th>Father:</th>
-        <td><%= best_in_place( @person, :father_id, {
-          :type => :autocomplete,
-          :nil => '<span class="nil">Click to add father</span>',
-          :path => update_father_person_path,
-          :value => @person.father ? render( :partial => 'person', :locals => { :person => @person.father } ) : '',
-          :autocomplete => autocomplete_person_name_people_path,
-          :id_element => "person_father_id",
-          :id_element_name => "person[father_id]"
-        } ) %></td>
-      </tr>
-
-      <tr>
-        <th>Mother:</th>
-        <td><%= best_in_place( @person, :mother_id, {
-          :type => :autocomplete,
-          :nil => '<span class="nil">Click to add mother</span>',
-          :path => update_mother_person_path,
-          :value => @person.mother ? render( :partial => 'person', :locals => { :person => @person.mother } ) : '',
-          :autocomplete => autocomplete_person_name_people_path,
-          :id_element => "person_mother_id",
-          :id_element_name => "person[mother_id]"
-        } ) %></td>
-      </tr>
-
-      <tr>
-        <th>Partners:</th>
-        <td>
-          <div class="editable">
-            <%= render :partial => 'partnerships', :locals => { :person => @person } %>
-            <%= link_to_function( "Add new partner", "swapVisibility( $( '#add_partnership_form_container' ), $( '#add_partnership_link' ) ); $( '#partnership_name' ).focus()", :id => "add_partnership_link" ) %>
-            <div id="add_partnership_form_container" style="display: none;">
-              <%= form_for :partnership, :remote => true, :url => partnerships_path,
-                :html => { 'data-type' => 'html', :id => 'add_partnership_form' } do |f| %>
-                Name: <%= f.autocomplete_field :partner_name, autocomplete_person_name_people_path, :"data-id_element" => "#partnership_partner_id" %>
-              <%= f.hidden_field( :person_id, :value => @person.id ) %>
-              <%= f.hidden_field( :partner_id ) %>
-              <% end %>
-            </div>
-          </div>
-        </td>
-      </tr>
-
-      <tr>
-        <th>Children:</th>
-        <td>
-          <div class="editable">
-            <%= render :partial => 'children', :locals => { :person => @person } %>
-            <%= link_to_function( "Add new child", "swapVisibility( $( '#add_child_form_container' ), $( '#add_child_link' ) ); $( '#child_name' ).focus()", :id => "add_child_link" ) %>
-            <div id="add_child_form_container" style="display: none;">
-              <%= form_for :child, :remote => true, :url => person_children_path(@person),
-                :html => { 'data-type' => 'html', :id => 'add_child_form' } do |f| %>
-                Name: <%= f.autocomplete_field :child_name, autocomplete_person_name_people_path, :"data-id_element" => "#child_child_id" %>
-              <%= f.hidden_field( :child_id ) %>
-              <% end %>
-            </div>
-          </div>
-        </td>
-      </tr>
-    </table>
+  <div id="tree">
+    <%= render :partial => 'tree', :locals => { :person => @person } %>
   </div>
+
   <div id="bio">
-    <h3 class="ui-widget-header">Bio</h3>
+
+    <div id="information">
+      <h3>Information</h3>
+      <table data-nil="<span class='nil'>Click to edit</span>">
+        <tr>
+          <th>Name:</th>
+          <td width="100%"><%= best_in_place @person, :name, :type => :input %></td>
+        </tr>
+
+        <tr>
+          <th>Gender:</th>
+          <td><%= best_in_place @person, :gender, :type => :select, :collection => [ ['male', 'male'], ['female', 'female'] ] %></td>
+        </tr>
+
+        <tr>
+          <th>Date of Birth:</th>
+          <td><%= best_in_place @person, :date_of_birth, :type => :input %></td>
+        </tr>
+
+        <tr>
+          <th>Date of Death:</th>
+          <td><%= best_in_place @person, :date_of_death, :type => :input %></td>
+        </tr>
+
+        <tr>
+          <th>Father:</th>
+          <td><%= best_in_place( @person, :father_id, {
+            :type => :autocomplete,
+            :nil => '<span class="nil">Click to add father</span>',
+            :path => update_father_person_path,
+            :value => @person.father ? render( :partial => 'person', :locals => { :person => @person.father } ) : '',
+            :autocomplete => autocomplete_person_name_people_path,
+            :id_element => "person_father_id",
+            :id_element_name => "person[father_id]"
+          } ) %></td>
+        </tr>
+
+        <tr>
+          <th>Mother:</th>
+          <td><%= best_in_place( @person, :mother_id, {
+            :type => :autocomplete,
+            :nil => '<span class="nil">Click to add mother</span>',
+            :path => update_mother_person_path,
+            :value => @person.mother ? render( :partial => 'person', :locals => { :person => @person.mother } ) : '',
+            :autocomplete => autocomplete_person_name_people_path,
+            :id_element => "person_mother_id",
+            :id_element_name => "person[mother_id]"
+          } ) %></td>
+        </tr>
+
+        <tr>
+          <th>Partners:</th>
+          <td>
+            <div class="editable">
+              <%= render :partial => 'partnerships', :locals => { :person => @person } %>
+              <%= link_to_function( "Add new partner", "swapVisibility( $( '#add_partnership_form_container' ), $( '#add_partnership_link' ) ); $( '#partnership_name' ).focus()", :id => "add_partnership_link" ) %>
+              <div id="add_partnership_form_container" style="display: none;">
+                <%= form_for :partnership, :remote => true, :url => partnerships_path,
+                  :html => { 'data-type' => 'html', :id => 'add_partnership_form' } do |f| %>
+                  Name: <%= f.autocomplete_field :partner_name, autocomplete_person_name_people_path, :"data-id_element" => "#partnership_partner_id" %>
+                <%= f.hidden_field( :person_id, :value => @person.id ) %>
+                <%= f.hidden_field( :partner_id ) %>
+                <% end %>
+              </div>
+            </div>
+          </td>
+        </tr>
+
+        <tr>
+          <th>Children:</th>
+          <td>
+            <div class="editable">
+              <%= render :partial => 'children', :locals => { :person => @person } %>
+              <%= link_to_function( "Add new child", "swapVisibility( $( '#add_child_form_container' ), $( '#add_child_link' ) ); $( '#child_name' ).focus()", :id => "add_child_link" ) %>
+              <div id="add_child_form_container" style="display: none;">
+                <%= form_for :child, :remote => true, :url => person_children_path(@person),
+                  :html => { 'data-type' => 'html', :id => 'add_child_form' } do |f| %>
+                  Name: <%= f.autocomplete_field :child_name, autocomplete_person_name_people_path, :"data-id_element" => "#child_child_id" %>
+                <%= f.hidden_field( :child_id ) %>
+                <% end %>
+              </div>
+            </div>
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <h3>Bio</h3>
     <p><%= best_in_place @person, :bio, :type => :textarea, :nil => '<span class="nil">Click to add a biography</span>' %></p>
   </div>
 </div>

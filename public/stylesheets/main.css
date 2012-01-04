@@ -45,22 +45,20 @@ option.grey {
 tr.hover:hover {
   background-color: #eee;
 }
-#infovis {
-  height: 600px;
-  width: 65%;
-  overflow: hidden;
-  float: left;
-  margin: 0;
-}
-#vitals {
-  float: left;
+#information {
+  float: right;
   width: 33%;
   padding-left: 1em;
-  margin: 0;
+  margin: 0 0 10px 10px;
 }
 #bio {
   clear: left;
   padding-top: 2em;
+}
+#bio h3 {
+  margin: 5px;
+  padding-bottom: 5px;
+  border-bottom: 2px solid #666;
 }
 /* ======= Navigation ======= */
 #topbar {
@@ -185,30 +183,54 @@ div.validation-error li {
   box-shadow: 2px 2px 15px #333;
 }
 /* ======= Tree ======= */
-table.tree {
+#tree {
+  width: 100%;
+  text-align: center;
+  border: 1px dashed #abc;
+  background-color: #abc;
+}
+#tree table {
+  margin: auto;
+}
+#tree table {
   border-spacing: 0px;
   border-collapse: collapse;
   width: 800px;
+  background: url('/images/tree_bg.png') top left no-repeat;
 }
-table.tree tr.greatgrandparents td {
+#tree table tr.greatgrandparents td {
   width: 100px;
 }
-table.tree td {
-  padding: 0px;
-  background-color: #e9e9e9;
+#tree table div.children {
+  background: url('/images/tree_children_bg.png') top center repeat-y;
 }
-a.tree_node {
-  display: block;
-  background-color: #eee;
-  border: 1px solid #ccc;
+#tree table td {
+  padding: 0px;
+}
+#tree div.empty_node {
+  background-color: #cdd5dd;
   width: 90px;
-  height: 40px;
+  height: 62px;
+  margin: 10px auto;
+}
+#tree div.node {
+  background-color: #eee;
+  width: 90px;
+  height: 62px;
+  margin: 10px auto;
+}
+#tree a.node {
+  display: block;
+  width: 84px;
+  height: 56px;
   padding: 3px;
   text-decoration: none;
   font-size: 10px;
-  margin: 10px auto;
   overflow: hidden;
+  -moz-box-shadow: 3px 3px 15px #333;
+  -webkit-box-shadow: 3px 3px 15px #333;
+  box-shadow: 3px 3px 15px #333;
 }
-a.tree_node .name {
+#tree a.node .name {
   font-weight: bold;
 }
