@@ -10,6 +10,12 @@ class Person < ActiveRecord::Base
       'WHERE (ps.partner_id = #{id} AND ps.person_id = p.id) '+
         'OR (ps.person_id = #{id} AND ps.partner_id = p.id) '+
       'ORDER BY ps.date_started'
+  has_many :defacto_partners, :class_name => 'Person', :finder_sql =>
+    'SELECT DISTINCT p.*'+
+      'FROM people p, people q '+
+      'WHERE (q.father_id = #{id} AND q.mother_id = p.id) '+
+        'OR  (q.mother_id = #{id} AND q.father_id = p.id) '+
+      'ORDER BY q.date_of_birth'
   has_many :children_of_father, :class_name => 'Person', :foreign_key => 'father_id'
   has_many :children_of_mother, :class_name => 'Person', :foreign_key => 'mother_id'
   #named_scope :children, :include => [ :children_of_father, :children_of_mother ]
@@ -54,6 +60,10 @@ class Person < ActiveRecord::Base
     self.children.find_all { |child| !(child.mother_id && child.father_id) }
   end
 
+  def children_ids
+    self.children_of_father_ids | self.children_of_mother_ids
+  end
+
   def add_child( child )
     if self.gender == 'male'
       self.children_of_father += [child]
@@ -74,8 +84,8 @@ class Person < ActiveRecord::Base
     end
   end
 
-  def children_ids
-    self.children_of_father_ids | self.children_of_mother_ids
+  def all_partners
+    partners | defacto_partners
   end
 
   def parents
