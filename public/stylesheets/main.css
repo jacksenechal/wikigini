@@ -188,36 +188,44 @@ div.validation-error li {
   text-align: center;
   border: 1px dashed #abc;
   background-color: #abc;
+  overflow: auto;
 }
 #tree table {
-  margin: auto;
+  margin: 10px auto;
 }
 #tree table {
   border-spacing: 0px;
   border-collapse: collapse;
-  width: 800px;
   background: url('/images/tree_bg.png') top left no-repeat;
 }
 #tree table tr.greatgrandparents td {
   width: 100px;
 }
-#tree table div.children {
+#tree table div.partner {
   background: url('/images/tree_children_bg.png') top center repeat-y;
+  float: left;
+  margin-left: 10px;
 }
 #tree table td {
-  padding: 0px;
+  padding: 10px 0px;
+}
+#tree table td.self {
+  background: url('/images/tree_partners_bg.png') top right no-repeat;
+}
+#tree table td.partners {
+  background: url('/images/tree_partners_bg.png') top right repeat-x;
 }
 #tree div.empty_node {
   background-color: #cdd5dd;
   width: 90px;
   height: 62px;
-  margin: 10px auto;
+  margin: auto;
 }
 #tree div.node {
   background-color: #eee;
   width: 90px;
   height: 62px;
-  margin: 10px auto;
+  margin: auto;
 }
 #tree a.node {
   display: block;
@@ -233,4 +241,7 @@ div.validation-error li {
 }
 #tree a.node .name {
   font-weight: bold;
+}
+#tree div.node_separator {
+  height: 10px;
 }
