@@ -190,8 +190,9 @@ div.validation-error li {
   background-color: #abc;
   overflow: auto;
 }
-#tree table {
-  margin: 10px auto;
+#tree_container {
+  margin: auto;
+  padding: 8px 20px 10px 13px;
 }
 #tree table {
   border-spacing: 0px;

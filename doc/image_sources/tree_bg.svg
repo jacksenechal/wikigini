@@ -79,8 +79,8 @@
      fit-margin-bottom="0"
      inkscape:window-width="1440"
      inkscape:window-height="849"
-     inkscape:window-x="0"
-     inkscape:window-y="24"
+     inkscape:window-x="2880"
+     inkscape:window-y="1824"
      inkscape:window-maximized="1" />
   <metadata
      id="metadata7">
@@ -101,14 +101,17 @@
      transform="translate(-325.71429,-437.00504)">
     <path
        style="fill:#808080;stroke:#cccccc;stroke-width:3.9550848;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-start:none;marker-end:none"
-       d="m 528.30253,642.00504 395.06265,0"
+       d="m 524.80946,642.00504 398.55571,0"
        id="path4754"
        inkscape:connector-curvature="0" />
     <path
        style="fill:#808080;fill-opacity:1;stroke:#cccccc;stroke-width:4;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
-       d="m 728.71429,724.00504 0,-79.09196"
+       d="m 724.71429,724.00504 0,-79.09196"
        id="path5500"
-       inkscape:connector-curvature="0" />
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/home/jack/Projects/wikigini/public/images/path5500.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
     <path
        style="fill:#808080;fill-opacity:1;stroke:#cccccc;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
        d="m 425.70453,561.00504 199.02918,0"
@@ -117,7 +120,7 @@
        sodipodi:nodetypes="cc" />
     <path
        style="fill:#808080;fill-opacity:1;stroke:#cccccc;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
-       d="m 528.71429,642.00504 0,-81"
+       d="m 524.71429,642.00504 0,-81"
        id="path5878"
        inkscape:connector-curvature="0" />
     <path

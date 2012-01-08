@@ -5,17 +5,17 @@ class Person < ActiveRecord::Base
       'WHERE ps.person_id = #{id} OR ps.partner_id = #{id} '+
       'ORDER BY ps.date_started'
   has_many :partners, :class_name => 'Person', :finder_sql =>
-    'SELECT DISTINCT p.*, ps.date_started '+
+    'SELECT DISTINCT p.*, ps.date_started AS date_started '+
       'FROM people p, partnerships ps '+
       'WHERE (ps.partner_id = #{id} AND ps.person_id = p.id) '+
         'OR (ps.person_id = #{id} AND ps.partner_id = p.id) '+
       'ORDER BY ps.date_started'
   has_many :defacto_partners, :class_name => 'Person', :finder_sql =>
-    'SELECT DISTINCT p.*, q.date_of_birth '+
-      'FROM people p, people q '+
-      'WHERE (q.father_id = #{id} AND q.mother_id = p.id) '+
-        'OR  (q.mother_id = #{id} AND q.father_id = p.id) '+
-      'ORDER BY q.date_of_birth'
+    'SELECT DISTINCT person.*, child.date_of_birth AS date_started '+
+      'FROM people person, people child '+
+      'WHERE (child.father_id = #{id} AND child.mother_id = person.id) '+
+        'OR  (child.mother_id = #{id} AND child.father_id = person.id) '+
+      'ORDER BY child.date_of_birth'
   has_many :children_of_father, :class_name => 'Person', :foreign_key => 'father_id'
   has_many :children_of_mother, :class_name => 'Person', :foreign_key => 'mother_id'
   #named_scope :children, :include => [ :children_of_father, :children_of_mother ]

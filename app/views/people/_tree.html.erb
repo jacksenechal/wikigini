@@ -8,46 +8,49 @@
   end
 %>
 
-<table class="tree" style="width: <%= 800 + (extra_cols * 100) %>px;">
-  <tr class="greatgrandparents">
-    <td><%= tree_node person.mother.mother.mother rescue tree_node nil %></td>
-    <td><%= tree_node person.mother.mother.father rescue tree_node nil %></td>
-    <td><%= tree_node person.mother.father.mother rescue tree_node nil %></td>
-    <td><%= tree_node person.mother.father.father rescue tree_node nil %></td>
-    <td><%= tree_node person.father.mother.mother rescue tree_node nil %></td>
-    <td><%= tree_node person.father.mother.father rescue tree_node nil %></td>
-    <td><%= tree_node person.father.father.mother rescue tree_node nil %></td>
-    <td><%= tree_node person.father.father.father rescue tree_node nil %></td>
-    <% extra_cols.times do %><td></td><% end %>
-  </tr>
-  <tr class="grandparents">
-    <td colspan="2"><%= tree_node person.mother.mother rescue tree_node nil %></td>
-    <td colspan="2"><%= tree_node person.mother.father rescue tree_node nil %></td>
-    <td colspan="2"><%= tree_node person.father.mother rescue tree_node nil %></td>
-    <td colspan="2"><%= tree_node person.father.father rescue tree_node nil %></td>
-    <% extra_cols.times do %><td></td><% end %>
-  </tr>
-  <tr class="parents">
-    <td colspan="4"><%= tree_node person.mother rescue tree_node nil %></td>
-    <td colspan="4"><%= tree_node person.father rescue tree_node nil %></td>
-    <% extra_cols.times do %><td></td><% end %>
-  </tr>
-  <tr>
-    <td colspan="3"></td>
-    <td colspan="2"<%= person.all_partners.size > 0 ? ' class="self"'.html_safe : '' %>>
-      <%= tree_node person %>
-      <%= children_with_unknown %>
-    </td>
-    <td class="partners" colspan="<%= person.partners.size %>">
-      <% person.all_partners.each do |partner| %>
-        <div class="partner">
-          <%= tree_node partner %>
-          <%= children_with_partner partner %>
-        </div>
+<div id="tree_container" style="width: <%= 800 + (extra_cols * 100) %>px;">
+  <table class="tree">
+    <tr class="greatgrandparents">
+      <td><%= tree_node person.mother.mother.mother rescue tree_node nil %></td>
+      <td><%= tree_node person.mother.mother.father rescue tree_node nil %></td>
+      <td><%= tree_node person.mother.father.mother rescue tree_node nil %></td>
+      <td><%= tree_node person.mother.father.father rescue tree_node nil %></td>
+      <td><%= tree_node person.father.mother.mother rescue tree_node nil %></td>
+      <td><%= tree_node person.father.mother.father rescue tree_node nil %></td>
+      <td><%= tree_node person.father.father.mother rescue tree_node nil %></td>
+      <td><%= tree_node person.father.father.father rescue tree_node nil %></td>
+      <% extra_cols.times do %><td></td><% end %>
+    </tr>
+    <tr class="grandparents">
+      <td colspan="2"><%= tree_node person.mother.mother rescue tree_node nil %></td>
+      <td colspan="2"><%= tree_node person.mother.father rescue tree_node nil %></td>
+      <td colspan="2"><%= tree_node person.father.mother rescue tree_node nil %></td>
+      <td colspan="2"><%= tree_node person.father.father rescue tree_node nil %></td>
+      <% extra_cols.times do %><td></td><% end %>
+    </tr>
+    <tr class="parents">
+      <td colspan="4"><%= tree_node person.mother rescue tree_node nil %></td>
+      <td colspan="4"><%= tree_node person.father rescue tree_node nil %></td>
+      <% extra_cols.times do %><td></td><% end %>
+    </tr>
+    <tr>
+      <td colspan="3"></td>
+      <td colspan="2"<%= person.all_partners.size > 0 ? ' class="self"'.html_safe : '' %>>
+        <%= tree_node person %>
+      </td>
+      <% if person.all_partners.size > 0 %>
+        <td class="partners" colspan="<%= person.partners.size %>">
+          <% person.all_partners.each do |partner| %>
+            <div class="partner">
+              <%= tree_node partner %>
+              <%= children_with_partner partner %>
+            </div>
+          <% end %>
+        </td>
       <% end %>
-    </td>
-    <% fill_cols.times do %>
-      <td>&nbsp;</td>
-    <% end %>
-  </tr>
-</table>
+      <% fill_cols.times do %>
+        <td>&nbsp;</td>
+      <% end %>
+    </tr>
+  </table>
+</div>
