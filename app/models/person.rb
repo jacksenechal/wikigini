@@ -5,13 +5,13 @@ class Person < ActiveRecord::Base
       'WHERE ps.person_id = #{id} OR ps.partner_id = #{id} '+
       'ORDER BY ps.date_started'
   has_many :partners, :class_name => 'Person', :finder_sql =>
-    'SELECT DISTINCT p.*, ps.date_started AS date_started '+
+    'SELECT DISTINCT p.*, ps.date_started AS partnership_date_started '+
       'FROM people p, partnerships ps '+
       'WHERE (ps.partner_id = #{id} AND ps.person_id = p.id) '+
         'OR (ps.person_id = #{id} AND ps.partner_id = p.id) '+
       'ORDER BY ps.date_started'
   has_many :defacto_partners, :class_name => 'Person', :finder_sql =>
-    'SELECT DISTINCT person.*, child.date_of_birth AS date_started '+
+    'SELECT DISTINCT person.*, child.date_of_birth AS partnership_date_started '+
       'FROM people person, people child '+
       'WHERE (child.father_id = #{id} AND child.mother_id = person.id) '+
         'OR  (child.mother_id = #{id} AND child.father_id = person.id) '+
@@ -85,7 +85,10 @@ class Person < ActiveRecord::Base
   end
 
   def all_partners
-    partners | defacto_partners
+    # Explicit partners override defacto partners in the union operation.
+    # Then we sort by the date the partnership started, which in the
+    # case of the defacto partners is the date their child was born.
+    (partners | defacto_partners).sort_by { |p| p.partnership_date_started || 0 }
   end
 
   def parents
