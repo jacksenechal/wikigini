@@ -49,11 +49,11 @@ class Person < ActiveRecord::Base
   end
 
   def children
-    self.children_of_father | self.children_of_mother
+    ( self.children_of_father | self.children_of_mother ).sort_by &:date_of_birth
   end
 
   def children_with( person )
-    self.children & person.children rescue []
+    ( self.children & person.children rescue [] ).sort_by &:date_of_birth
   end
 
   def children_with_unknown
