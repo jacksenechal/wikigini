@@ -49,11 +49,15 @@ class Person < ActiveRecord::Base
   end
 
   def children
-    ( self.children_of_father | self.children_of_mother ).sort_by &:date_of_birth
+    (self.children_of_father | self.children_of_mother).sort_by { |c|
+      c.date_of_birth || Date.new(0)
+    }
   end
 
   def children_with( person )
-    ( self.children & person.children rescue [] ).sort_by &:date_of_birth
+    (self.children & person.children rescue []).sort_by { |c|
+      c.date_of_birth || Date.new(0)
+    }
   end
 
   def children_with_unknown
@@ -88,7 +92,9 @@ class Person < ActiveRecord::Base
     # Explicit partners override defacto partners in the union operation.
     # Then we sort by the date the partnership started, which in the
     # case of the defacto partners is the date their child was born.
-    (partners | defacto_partners).sort_by { |p| p.partnership_date_started || 0 }
+    (partners | defacto_partners).sort_by { |p|
+      p.partnership_date_started || 0
+    }
   end
 
   def parents
