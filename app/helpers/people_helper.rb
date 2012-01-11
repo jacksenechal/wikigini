@@ -3,7 +3,7 @@ module PeopleHelper
     render :partial => "tree_node", :locals => { :person => person }
   end
 
-  def children_with_partner(partner)
+  def children_with(partner)
     if !partner.nil?
       children_html = []
       @person.children_with(partner).each do |child|
@@ -15,11 +15,5 @@ module PeopleHelper
       end
     end
     nil
-  end
-
-  def children_with_unknown
-    @person.children_with_unknown.each do |child|
-      concat tree_node(child)
-    end
   end
 end

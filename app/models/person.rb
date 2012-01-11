@@ -55,13 +55,13 @@ class Person < ActiveRecord::Base
   end
 
   def children_with( person )
-    (self.children & person.children rescue []).sort_by { |c|
-      c.date_of_birth || Date.new(0)
-    }
-  end
-
-  def children_with_unknown
-    self.children.find_all { |child| !(child.mother_id && child.father_id) }
+    if person == :unknown
+      self.children.find_all { |child| !(child.mother_id && child.father_id) }
+    else
+      (self.children & person.children rescue []).sort_by { |c|
+        c.date_of_birth || Date.new(0)
+      }
+    end
   end
 
   def children_ids
@@ -93,7 +93,7 @@ class Person < ActiveRecord::Base
     # Then we sort by the date the partnership started, which in the
     # case of the defacto partners is the date their child was born.
     (partners | defacto_partners).sort_by { |p|
-      p.partnership_date_started || 0
+      p.partnership_date_started || ''
     }
   end
 

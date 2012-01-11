@@ -37,13 +37,14 @@
       <td colspan="3"></td>
       <td colspan="2"<%= person.all_partners.size > 0 ? ' class="self"'.html_safe : '' %>>
         <%= tree_node person %>
+        <%= children_with :unknown %>
       </td>
       <% if person.all_partners.size > 0 %>
         <td class="partners" colspan="<%= person.all_partners.size %>">
           <% person.all_partners.each do |partner| %>
             <div class="partner">
               <%= tree_node partner %>
-              <%= children_with_partner partner %>
+              <%= children_with partner %>
             </div>
           <% end %>
         </td>
