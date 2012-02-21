@@ -3,7 +3,7 @@ source 'http://rubygems.org'
 gem 'rails', '3.0.3'
 
 # Bundle edge Rails instead:
-# gem 'rails', :git => 'git://github.com/rails/rails.git'
+gem 'vestal_versions', :git => 'https://github.com/jodosha/vestal_versions.git'
 
 gem 'sqlite3-ruby', :require => 'sqlite3'
 gem 'rails3-jquery-autocomplete'
