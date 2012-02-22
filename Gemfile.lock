@@ -1,3 +1,11 @@
+GIT
+  remote: https://github.com/adamcooper/vestal_versions.git
+  revision: 6273df533f85014062e346cb1807b0531a809ee2
+  specs:
+    vestal_versions (1.2.2)
+      activerecord (>= 3.0.0)
+      activesupport (>= 3.0.0)
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -84,3 +92,4 @@ DEPENDENCIES
   rails3-jquery-autocomplete
   sqlite3-ruby
   validates_timeliness
+  vestal_versions!
