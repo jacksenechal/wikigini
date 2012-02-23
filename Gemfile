@@ -10,6 +10,12 @@ gem 'rails3-jquery-autocomplete'
 gem 'jquery-rails'
 gem 'validates_timeliness'
 
+group :development do
+  gem 'pry'
+  gem 'pry-doc'
+  gem 'pry-git'
+end
+
 # Use unicorn as the web server
 # gem 'unicorn'
 
