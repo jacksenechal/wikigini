@@ -1,0 +1,13 @@
+<div id="content">
+  <h2><%=h @person.name %> &ndash; Version History</h2>
+
+  <p>
+    <% @person.versions.reverse.each do |v| %>
+      <%= v.number %>)
+      <%= link_to v.created_at, version_of_person_url(@person, v.number) %>
+      <%= v.user_name || '<unknown user>' %>
+      <%= "edited #{v.modifications.keys.join ','}" unless v.modifications.empty? %>
+      <br/>
+    <% end %>
+  </p>
+</div>

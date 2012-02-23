@@ -45,6 +45,9 @@ option.grey {
 tr.hover:hover {
   background-color: #eee;
 }
+.dim {
+  opacity: 0.5;
+}
 #information {
   float: right;
   width: 33%;
@@ -59,6 +62,9 @@ tr.hover:hover {
   margin: 5px;
   padding-bottom: 5px;
   border-bottom: 2px solid #666;
+}
+#versions {
+  float: right;
 }
 /* ======= Navigation ======= */
 #topbar {

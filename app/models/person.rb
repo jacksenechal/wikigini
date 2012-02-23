@@ -1,4 +1,6 @@
 class Person < ActiveRecord::Base
+  versioned :initial_version => true
+
   has_many :partnerships, :dependent => :destroy, :finder_sql =>
     'SELECT DISTINCT ps.* '+
       'FROM partnerships ps '+

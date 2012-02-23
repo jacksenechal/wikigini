@@ -10,6 +10,26 @@ class PeopleController < ApplicationController
     end
   end
 
+  # GET /people/1/versions
+  def versions_index
+    @person = Person.find( params[:id] )
+
+    respond_to do |format|
+      format.html # versions_index.html.erb
+    end
+  end
+
+  # GET /people/1/versions/5
+  def versions_show
+    @person = Person.find( params[:id] )
+    @person.revert_to( params[:version].to_i )
+    puts "\n\n#{params[:version]} :: #{@person.version}\n\n"
+
+    respond_to do |format|
+      format.html { render "show" }
+    end
+  end
+
   # GET /people/1
   def show
     @person = Person.find( params[:id] )

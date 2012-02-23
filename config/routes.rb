@@ -1,13 +1,16 @@
 WikiGini::Application.routes.draw do
   resources :people do
     member do
-      get   :tree
       post  :update_father
       post  :update_mother
+      match 'versions/:version', :action => :versions_show, :as => 'version_of', :version => /\d+/
+      match 'versions', :action => :versions_index
+      # match 'versions/compare/:from/:to',
+      #   :action => :versions_compare,
+      #   :constraints => { :from => /\d+/, :to => /\d+/ }
     end
     collection do
       get   :autocomplete_person_name
-      get   :tree
     end
     resources :children, :only => [ :create, :destroy ]
   end

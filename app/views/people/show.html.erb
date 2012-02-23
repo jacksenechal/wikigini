@@ -5,6 +5,13 @@
 </div>
 
 <div id="content">
+  <div id="versions">
+    <% if @person.reverted? %>
+      showing version <%= @person.version %> &ndash;
+      <%= link_to "current version", person_url %>
+    <% end %>
+    <%= link_to "change history", :action => :versions_index %>
+  </div>
   <h2><%=h @person.name %></h2>
 
   <div id="tree">
