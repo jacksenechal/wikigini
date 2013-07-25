@@ -2,19 +2,16 @@ source 'http://rubygems.org'
 ruby '1.9.3'
 
 gem 'rails', '3.0.3'
+gem 'rake', '0.8.7'
 
-# Bundle edge Rails instead:
 gem 'vestal_versions', :git => 'https://github.com/adamcooper/vestal_versions.git'
-
-group :development do
-  gem 'sqlite3-ruby', :require => 'sqlite3'
-end
 
 gem 'rails3-jquery-autocomplete'
 gem 'jquery-rails'
 gem 'validates_timeliness'
 
 group :development do
+  gem 'sqlite3-ruby', :require => 'sqlite3'
   gem 'pry'
   gem 'pry-doc'
   gem 'pry-git'
