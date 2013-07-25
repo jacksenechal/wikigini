@@ -7,7 +7,7 @@ gem 'rake', '0.8.7'
 gem 'vestal_versions', :git => 'https://github.com/adamcooper/vestal_versions.git'
 
 gem 'rails3-jquery-autocomplete'
-gem 'jquery-rails'
+gem 'jquery-rails', '~> 0.2.6'
 gem 'validates_timeliness'
 
 group :development, :test do
