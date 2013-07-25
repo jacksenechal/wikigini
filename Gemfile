@@ -6,8 +6,9 @@ gem 'rails', '3.0.3'
 # Bundle edge Rails instead:
 gem 'vestal_versions', :git => 'https://github.com/adamcooper/vestal_versions.git'
 
-# Only needed locally, breaks Heroku:
-# gem 'sqlite3-ruby', :require => 'sqlite3'
+group :development do
+  gem 'sqlite3-ruby', :require => 'sqlite3'
+end
 
 gem 'rails3-jquery-autocomplete'
 gem 'jquery-rails'
