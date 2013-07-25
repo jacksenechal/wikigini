@@ -119,6 +119,7 @@ DEPENDENCIES
   pry-git
   rails (= 3.0.3)
   rails3-jquery-autocomplete
+  rake (= 0.8.7)
   sqlite3-ruby
   validates_timeliness
   vestal_versions!

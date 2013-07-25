@@ -10,11 +10,15 @@ gem 'rails3-jquery-autocomplete'
 gem 'jquery-rails'
 gem 'validates_timeliness'
 
-group :development do
+group :development, :test do
   gem 'sqlite3-ruby', :require => 'sqlite3'
   gem 'pry'
   gem 'pry-doc'
   gem 'pry-git'
+end
+
+group :heroku do
+  gem 'pg'
 end
 
 # Use unicorn as the web server
